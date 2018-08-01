@@ -1,0 +1,228 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>cat.calidos.morfeu</groupId>
+	<artifactId>eurinome-webapp</artifactId>
+	<version>0.0.2-SNAPSHOT</version>
+	<packaging>war</packaging>
+
+	<name>Eurinome web application</name>
+	<description>TBD</description>
+	<inceptionYear>2018</inceptionYear>
+
+	<properties>
+		<jetty-http-port>8090</jetty-http-port>
+		<jetty-stop-port>8190</jetty-stop-port>
+		<jetty-context-path>/eurinome</jetty-context-path>
+		<jetty-version>9.4.10.RC1</jetty-version>
+		<dagger-2-version>2.16</dagger-2-version>
+		<jackson-2-version>2.9.4</jackson-2-version>
+		<jtwig-version>5.86.1.RELEASE</jtwig-version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.7.0</version>
+				<configuration>
+					<source>1.9</source>
+					<target>1.9</target>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>com.google.dagger</groupId>
+							<artifactId>dagger-compiler</artifactId>
+							<version>${dagger-2-version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>${jetty-version}</version>
+				<configuration>
+					<dumpOnStart>false</dumpOnStart> <!-- set to true for debugging -->
+					<scanIntervalSeconds>1</scanIntervalSeconds>
+					<stopPort>${jetty-stop-port}</stopPort>
+					<stopKey>STOP</stopKey>
+					<useTestScope>true</useTestScope>
+					<webApp>
+						<contextPath>${jetty-context-path}</contextPath>
+						<!-- we add this extra classpath so jetty loads templates and all jar deps like jackson and stuff -->
+						<extraClasspath>${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/lib</extraClasspath>
+						<resourceBases>
+							<resourceBase>${basedir}/src/main/webapp</resourceBase><!-- eventually set to /dist? -->
+							<resourceBase>${basedir}/src/test/resources</resourceBase>	<!-- data files for angular2 -->
+							<!-- fallback for testing: /morfeu/target/test-classes/test-resources/.. is ok -->
+							<resourceBase>${basedir}</resourceBase>
+						</resourceBases>
+						<webInfIncludeJarPattern>^$</webInfIncludeJarPattern>
+					</webApp>
+					<!--scanTargetPatterns> this is a terrible idea, it seems that it opens all the files <scanTargetPattern> 
+						in the exclude, which leads to thousands of fds being used < directory>src/main/webapp</directory> <excludes> <exclude>node_modules</exclude> 
+						</excludes> </scanTargetPattern> </scanTargetPatterns -->
+					<systemProperties>
+						<systemProperty>
+							<name>org.eclipse.jetty.annotations.maxWait</name>
+							<value>60000</value>
+						</systemProperty>
+						<systemProperty> <!-- mvn jetty:run -DRESOURCES_PREFIX=file://$(PWD)/ -->
+							<name>RESOURCES_PREFIX</name>
+							<value>${resources-prefix}</value>
+						</systemProperty>
+					</systemProperties>
+					<httpConnector>
+						<port>${jetty-http-port}</port>
+					</httpConnector>
+				</configuration>
+				<executions>
+					<execution>	<!-- start jetty when target is integration testing -->
+						<id>start-jetty-integration-test</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<scanIntervalSeconds>0</scanIntervalSeconds>
+							<daemon>true</daemon>
+						</configuration>
+					</execution>
+					<execution>	<!-- stop jetty when completed integration testing -->
+						<id>stop-jetty</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+						<configuration>
+							<stopKey>STOP</stopKey>
+							<stopPort>${jetty-stop-port}</stopPort>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+
+	</build>
+	<dependencies>
+		<!-- DEPENDENCY INJECTION -->
+		<dependency>
+			<groupId>com.google.dagger</groupId>
+			<artifactId>dagger</artifactId>
+			<version>${dagger-2-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.dagger</groupId>
+			<artifactId>dagger-compiler</artifactId>
+			<version>${dagger-2-version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+			<!-- scope>provided</scope -->
+		</dependency>
+
+		<!-- Jackson JSON lib stuff -->
+		<!-- the core, which includes Streaming API, shared low-level abstractions (but NOT data-binding) -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson-2-version}</version>
+		</dependency>
+
+		<!-- Just the annotations; use this dependency if you want to attach annotations to classes without connecting 
+			them to the code. -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson-2-version}</version>
+		</dependency>
+
+		<!-- databinding; ObjectMapper, JsonNode and related classes are here -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson-2-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-yaml</artifactId>
+			<version>${jackson-2-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jdk8</artifactId>
+			<version>${jackson-2-version}</version>
+		</dependency>
+
+		<!-- JETTY RUNTIME -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>${jetty-version}</version>
+		</dependency>
+
+		<!-- HELPERS -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
+		</dependency>
+
+		<!-- logback -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.3.0-alpha4</version>
+		</dependency>
+
+		<!-- templating -->
+		<dependency>
+			<groupId>org.jtwig</groupId>
+			<artifactId>jtwig-core</artifactId>
+			<version>${jtwig-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jtwig</groupId>
+			<artifactId>jtwig-reflection</artifactId>
+			<version>${jtwig-version}</version>
+		</dependency>
+
+		<!-- UNIT TESTING -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+			<comments>Copyright (C) 2018 Daniel Giribet</comments>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>danigiri</id>
+			<name>Daniel Giribet</name>
+			<email>dani AT calidos DOT cat</email>
+			<url>http//dani.calidos.com</url>
+			<roles>
+				<role>creator</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
+</project>
+			
