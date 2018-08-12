@@ -22,6 +22,10 @@
 		<morfeu-version>0.0.2-SNAPSHOT</morfeu-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<helm-version>release-2.10</helm-version>
+		<helm-url>https://github.com/helm/helm/archive/${helm-version}.zip</helm-url>
+		<mon.sourcefolder_>${project.build.directory}/helm-${helm-version}</mon.sourcefolder_>
+
 	</properties>
 
 	<build>
@@ -185,16 +189,11 @@
 			<version>1.3.0-alpha4</version>
 		</dependency>
 
-		<!-- templating -->
-		<dependency>
-			<groupId>org.jtwig</groupId>
-			<artifactId>jtwig-core</artifactId>
-			<version>${jtwig-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jtwig</groupId>
-			<artifactId>jtwig-reflection</artifactId>
-			<version>${jtwig-version}</version>
+		
+		<dependency>	<!-- templating -->
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.7</version>
 		</dependency>
 
 		<!-- UNIT TESTING -->
