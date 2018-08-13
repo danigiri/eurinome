@@ -16,31 +16,10 @@
 
 package cat.calidos.eurinome.model;
 
-import java.util.List;
-
-import cat.calidos.eurinome.runtime.Showable;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public class Charts implements Showable {
-
-private List<Chart> charts;
-
-
-public Charts(List<Chart> charts) {
-
-	this.charts = charts;
-	
-}
-
-
-@Override
-public String show() {
-
-	// TODO Auto-generated method stub
-	return "";
-}
-
+public class Chart {
 
 }

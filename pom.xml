@@ -22,9 +22,10 @@
 		<morfeu-version>0.0.2-SNAPSHOT</morfeu-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<helm-version>release-2.10</helm-version>
-		<helm-url>https://github.com/helm/helm/archive/${helm-version}.zip</helm-url>
-		<mon.sourcefolder_>${project.build.directory}/helm-${helm-version}</mon.sourcefolder_>
+		<charts-version>master</charts-version>
+		<charts-url>https://github.com/helm/charts/archive/${charts-version}.zip</charts-url>
+		<charts-temp>${project.build.directory}/${charts-version}.zip</charts-temp>
+		<charts-target>${project.build.directory}</charts-target>
 
 	</properties>
 
@@ -45,6 +46,29 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+
+			<plugin>	<!-- Download and expand whatever is needed (charts) -->
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<echo message="-------------------------------------------------------------------" />
+								<echo message="Downloading charts '${charts-version}.zip'" />
+								<get src="${charts-url}" dest="${charts-temp}" skipexisting="true" />
+								<unzip src="${charts-temp}" dest="${charts-target}" overwrite="false"/>
+								<echo message="-------------------------------------------------------------------" />
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>

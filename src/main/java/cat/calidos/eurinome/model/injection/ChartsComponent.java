@@ -14,12 +14,12 @@
  *   limitations under the License.
  */
 
-package cat.calidos.eurinome.model;
+package cat.calidos.eurinome.model.injection;
 
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public class ChartApp {
+public interface ChartsComponent {
 
 }
