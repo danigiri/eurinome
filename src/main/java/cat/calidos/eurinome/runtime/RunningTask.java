@@ -16,15 +16,17 @@
 
 package cat.calidos.eurinome.runtime;
 
-import cat.calidos.eurinome.model.Task;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public abstract class Environment {
+public interface RunningTask extends Task {
 
-protected String name;
 
-public abstract Task setup();
+public boolean isComplete();
+
+
+public StoppingTask stop();
+
 
 }

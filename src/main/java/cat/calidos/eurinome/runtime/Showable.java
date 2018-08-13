@@ -14,12 +14,16 @@
  *   limitations under the License.
  */
 
-package cat.calidos.eurinome.model;
+package cat.calidos.eurinome.runtime;
 
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public abstract class AbstractTask implements Task {
+public interface Showable {
+
+
+public String show();
+
 
 }

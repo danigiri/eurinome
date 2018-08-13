@@ -14,12 +14,22 @@
  *   limitations under the License.
  */
 
-package cat.calidos.eurinome.model;
+package cat.calidos.eurinome.runtime;
 
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public interface Task {
+public interface StartingTask extends Task {
+
+
+public int remaining();
+
+public boolean hasStarted();
+
+public RunningTask runningTask() throws IllegalStateException;
+
+public StoppingTask cancel();
+
 
 }

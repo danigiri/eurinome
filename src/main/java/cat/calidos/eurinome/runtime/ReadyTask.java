@@ -16,18 +16,13 @@
 
 package cat.calidos.eurinome.runtime;
 
-import cat.calidos.eurinome.model.Task;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public class HelmEnvironment extends Environment {
+public interface ReadyTask extends Task {
 
-@Override
-public Task setup() {
 
-	// TODO Auto-generated method stub
-	return null;
-}
+public StartingTask start();
 
 }

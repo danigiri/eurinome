@@ -14,12 +14,29 @@
  *   limitations under the License.
  */
 
-package cat.calidos.eurinome.model;
+package cat.calidos.eurinome.runtime;
 
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public class SpawnTask extends AbstractTask {
+public interface Task extends Showable {
+
+public static int IDLE = 0;
+public static int STARTING = 1;
+public static int RUNNING = 2;
+public static int STOPPING = 3;
+public static int FINISHED = 3;
+
+public static int ONE_TIME = 10;
+public static int LONG_RUNNING = 11;
+
+
+public int status();
+
+public int type();
+
+public ReadyTask clone();
+
 
 }
