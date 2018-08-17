@@ -16,10 +16,23 @@
 
 package cat.calidos.eurinome.model.injection;
 
+import dagger.Component;
+
+import cat.calidos.eurinome.model.Chart;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public interface ChartsComponent {
+@Component(modules = ChartModule.class)
+public interface ChartComponent {
+
+Chart chart();
+
+@Component.Builder
+interface Builder {
+
+	ChartComponent build();
+
+}
 
 }

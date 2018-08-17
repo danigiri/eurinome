@@ -14,33 +14,33 @@
  *   limitations under the License.
  */
 
-package cat.calidos.eurinome.model;
+package cat.calidos.eurinome.model.injection;
 
 import java.util.List;
 
-import cat.calidos.eurinome.runtime.Showable;
+import javax.inject.Named;
+
+import dagger.BindsInstance;
+import dagger.Component;
+
+import cat.calidos.eurinome.model.ChartsCatalogue;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public class Charts implements Showable {
+@Component(modules = ChartCataloguesModule.class )
+public interface ChartCataloguesComponent {
 
-private List<Chart> charts;
+List<ChartsCatalogue> catalogues();
 
 
-public Charts(List<Chart> charts) {
+@Component.Builder
+interface Builder {
 
-	this.charts = charts;
-	
+	@BindsInstance Builder withPath(@Named("Path") String path);
+
+	ChartCataloguesComponent build();
+
 }
-
-
-@Override
-public String show() {
-
-	// TODO Auto-generated method stub
-	return "";
-}
-
 
 }
