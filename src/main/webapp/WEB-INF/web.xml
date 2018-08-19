@@ -13,7 +13,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
 
 	<servlet-mapping>
 		<servlet-name>EurinomeServlet</servlet-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/dyn/*</url-pattern>
 	</servlet-mapping>
 
 

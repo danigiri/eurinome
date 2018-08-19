@@ -1,0 +1,4 @@
+[
+	{ "name":"Stable", "uri":"/eurinome/dyn/catalogues/stable.json" }
+	,{ "name":"Incubator", "uri":"/eurinome/dyn/catalogues/incubator.json"  }
+]

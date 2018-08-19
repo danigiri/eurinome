@@ -16,31 +16,10 @@
 
 package cat.calidos.eurinome.model.injection;
 
-import java.util.List;
-
-import javax.inject.Named;
-
-import dagger.BindsInstance;
-import dagger.Component;
-
-import cat.calidos.eurinome.model.ChartsCatalogue;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-@Component(modules = ChartCataloguesModule.class )
-public interface ChartCataloguesComponent {
-
-List<ChartsCatalogue> catalogues();
-
-
-@Component.Builder
-interface Builder {
-
-	@BindsInstance Builder withPath(@Named("Path") String path);
-
-	ChartCataloguesComponent build();
-
-}
+public interface ChartsCatalogueComponent {
 
 }

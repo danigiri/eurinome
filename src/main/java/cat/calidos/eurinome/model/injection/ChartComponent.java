@@ -16,7 +16,10 @@
 
 package cat.calidos.eurinome.model.injection;
 
+import dagger.BindsInstance;
 import dagger.Component;
+
+import javax.inject.Named;
 
 import cat.calidos.eurinome.model.Chart;
 
@@ -26,10 +29,14 @@ import cat.calidos.eurinome.model.Chart;
 @Component(modules = ChartModule.class)
 public interface ChartComponent {
 
+
 Chart chart();
+
 
 @Component.Builder
 interface Builder {
+
+	@BindsInstance Builder withPath(@Named("Path") String path);
 
 	ChartComponent build();
 

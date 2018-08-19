@@ -84,6 +84,9 @@
 						<!-- we add this extra classpath so jetty loads templates and all jar deps like jackson and stuff -->
 						<extraClasspath>${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/lib</extraClasspath>
 						<webInfIncludeJarPattern>^$</webInfIncludeJarPattern>
+						<resourceBases>
+							<resourceBase>${project.build.outputDirectory}</resourceBase>	<!-- data files for angular app -->
+						</resourceBases>
 					</webApp>
 					<!--scanTargetPatterns> this is a terrible idea, it seems that it opens all the files <scanTargetPattern> 
 						in the exclude, which leads to thousands of fds being used < directory>src/main/webapp</directory> <excludes> <exclude>node_modules</exclude> 

@@ -16,8 +16,13 @@
 
 package cat.calidos.eurinome.model.injection;
 
+import java.io.File;
+
+import javax.inject.Named;
+
 import cat.calidos.eurinome.model.Chart;
 import dagger.Module;
+import dagger.Provides;
 
 /**
 *	@author daniel giribet
@@ -25,8 +30,17 @@ import dagger.Module;
 @Module
 public class ChartModule {
 
+
+@Provides
 Chart chart() {
 	return null;
 }
+
+
+@Provides
+File pathFile(@Named("Path") String path) {
+	return new File(path);
+}
+
 
 }
