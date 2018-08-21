@@ -1,4 +1,4 @@
 [
-	{ "name":"Stable", "uri":"/eurinome/dyn/catalogues/stable.json" }
-	,{ "name":"Incubator", "uri":"/eurinome/dyn/catalogues/incubator.json"  }
+	{ "name":"Landscaper", "uri":"/eurinome/catalogues/landscaper-catalogue.json" }
+	,{ "name":"Test", "uri":"/eurinome/catalogues/charts-catalogue.json"  }
 ]

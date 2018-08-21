@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   xmlns:mf="http://dani.calidos.com/morfeu/metadata"
+		   >
+
+	<xs:annotation>
+		<xs:appinfo>
+			<mf:desc>Description of test model</mf:desc>
+		</xs:appinfo>
+	</xs:annotation>
+
+<!-- this is a hack that should be configurable -->
+<xs:include schemaLocation="http://localhost:8080/morfeu/test-resources/models/test-types.xsd"/>
+
+<xs:element name="desired-states">
+		<xs:annotation>
+			<xs:appinfo>
+				<mf:metadata>
+					<mf:desc>Desired states holder</mf:desc>
+					<mf:presentation>WELL</mf:presentation>
+					<mf:thumb>assets/images/test-thumb.svg</mf:thumb>
+					<mf:transform case="obj-to-yaml" type="directive">ATTRIBUTES-ONLY</mf:transform>
+					<mf:transform case="yaml-to-xml" type="directive">ATTRIBUTES-ONLY</mf:transform>
+					<mf:transform case="yaml-to-xml" type="attribute">xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</mf:transform>
+					<mf:transform case="yaml-to-xml" type="attribute">xsi:noNamespaceSchemaLocation="../models/landscaper-model.xsd"</mf:transform>
+				</mf:metadata>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+
+				</xs:choice>
+			</xs:sequence>
+			<xs:attribute name="verbgose" type="" />
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>
