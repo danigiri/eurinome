@@ -16,10 +16,12 @@
 
 package cat.calidos.eurinome.model.injection;
 
+import dagger.Module;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Module
 public class ChartsCatalogueModule {
 
 }

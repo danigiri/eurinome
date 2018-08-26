@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   xmlns:mf="http://dani.calidos.com/morfeu/metadata"
+		   >
+
+	<xs:include schemaLocation="test-types.xsd" />
+	
+	<xs:annotation>
+		<xs:documentation>
+		XML Schema for landscaper desired state cells
+		</xs:documentation>
+	</xs:annotation>
+
+
+	<!-- this is a hack that should be configurable -->
+	<xs:include schemaLocation="http://localhost:8080/morfeu/test-resources/models/test-types.xsd"/>
+
+	<xs:complexType name="desiredState">
+		<xs:annotation>
+			<xs:appinfo>
+				<mf:metadata>
+					<mf:desc>Landscaper desired state</mf:desc>
+				</mf:metadata>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:attribute name="file" type="textField" use="required"/>
+		<xs:attribute name="verbose" type="booleanField" />
+	</xs:complexType>
+
+</xs:schema>

@@ -2,6 +2,7 @@
 	"name": "Landscaper catalogue"
 	,"desc": "Catalogue of landscaper desired states"
 	,"documents": [
+			{ "name":"Emty desired states", "kind": "yaml", "uri":"documents/empty.json" }
 	]
 	,"snippets": [
 	]
