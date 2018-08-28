@@ -3,11 +3,9 @@
 		   xmlns:mf="http://dani.calidos.com/morfeu/metadata"
 		   >
 
-	<xs:include schemaLocation="test-types.xsd" />
-	
 	<xs:annotation>
 		<xs:documentation>
-		XML Schema for landscaper desired state cells
+		XML Schema for helmfile declarations
 		</xs:documentation>
 	</xs:annotation>
 

@@ -32,7 +32,7 @@
 
 				</xs:choice>
 			</xs:sequence>
-			<xs:attribute name="verbgose" type="" />
+			<xs:attribute name="verbose" type="" />
 		</xs:complexType>
 	</xs:element>
 

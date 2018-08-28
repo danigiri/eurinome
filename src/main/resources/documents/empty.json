@@ -2,6 +2,6 @@
 	"name": "Empty"
 	,"desc": "Empty desired states"
 	,"kind": "yaml"
-	,"modelURI": "models/landscaper-model.xsd"
+	,"modelURI": "models/helmfile-model.xsd"
 	,"contentURI": "documents/empty.yaml"
 }

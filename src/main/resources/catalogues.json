@@ -1,4 +1,4 @@
 [
-	{ "name":"Landscaper", "uri":"/eurinome/catalogues/landscaper-catalogue.json" }
-	,{ "name":"Test", "uri":"/eurinome/catalogues/charts-catalogue.json"  }
+	{ "name":"Helmfiles", "uri":"/morfeu/proxy/catalogues/helmfiles-catalogue.json" }
+	,{ "name":"Test", "uri":"/morfeu/proxy/catalogues/charts-catalogue.json"  }
 ]

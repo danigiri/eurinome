@@ -1,0 +1,9 @@
+{
+	"name": "Helmfiles catalogue"
+	,"desc": "Catalogue of Helmfiles"
+	,"documents": [
+			{ "name":"Empty desired states", "kind": "yaml", "uri":"documents/empty.json" }
+	]
+	,"snippets": [
+	]
+	}
