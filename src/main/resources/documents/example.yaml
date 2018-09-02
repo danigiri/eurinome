@@ -1,0 +1,57 @@
+%YAML 1.2
+---
+repositories:
+  - name: roboll
+    url: http://roboll.io/charts
+    certFile: optional_client_cert
+    keyFile: optional_client_key
+    username: optional_username
+    password: optional_password
+
+context: kube-context					 # kube-context (--kube-context)
+
+#default values to set for args along with dedicated keys that can be set by contributers, cli args take precedence overe these
+helmDefaults:           
+  tillerNamespace: tiller-namespace  #dedicated default key for tiller-namespace
+  kubeContext: kube-context          #dedicated default key for kube-context
+  args:
+    - "--wait"
+    - "--recreate-pods"
+    - "--timeout=600"
+    - "--force"
+    - "--reset-values"
+
+releases:
+  # Published chart example
+  - name: vault                            # name of this release
+    namespace: vault                       # target namespace
+#   labels:                                  # Arbitrary key value pairs for filtering releases
+# NOT SUPPORTED     foo: bar
+    chart: roboll/vault-secret-manager     # the chart being installed to create this release, referenced by `repository/chart` syntax
+    version: ~1.24.1                       # the semver of the chart. range constraint is supported
+    values:
+      - vault.yaml                         # value files (--values)
+# NOT SUPPORTED     - db:                                # inline values. Passed via a temporary values file (--values)
+#          username: {{ requiredEnv "DB_USERNAME" }}
+#          password: {{ requiredEnv "DB_PASSWORD" }}
+    secrets:
+      - vault_secret.yaml                  # will attempt to decrypt it using helm-secrets plugin
+    set:                                   # values (--set)
+      - name: address
+        value: https://vault.example.com
+# NEED TO NEST THIS, AS WELL AS THE ARGS
+#      - name: db.password
+#        value: '{{ requiredEnv "DB_PASSWORD" }}'
+#      - name: proxy.domain
+#        value: '{{ requiredEnv "PLATFORM_ID" }}.my-domain.com'
+#      - name: proxy.scheme
+#        value: '{{ env "SCHEME" | default "https" }}'
+
+  # Local chart example
+  - name: grafana                            # name of this release
+    namespace: another                       # target namespace
+    chart: ../my-charts/grafana              # the chart being installed to create this release, referenced by relative path to local chart
+    values:
+    - "../../my-values/grafana/values.yaml"
+    - './values/{{ requiredEnv "PLATFORM_ENV" }}/config.yaml'
+    

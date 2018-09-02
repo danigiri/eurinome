@@ -1,0 +1,7 @@
+{
+	"name": "Example"
+	,"desc": "Vault example"
+	,"kind": "yaml"
+	,"modelURI": "target/classes/models/helmfile-model.xsd"
+	,"contentURI": "target/classes/documents/example.yaml"
+}

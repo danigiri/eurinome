@@ -57,7 +57,7 @@
 			<xs:appinfo>
 				<mf:metadata>
 					<mf:desc>Published chart</mf:desc>
-					<mf:presentation>ROW-WELL</mf:presentation>
+					<mf:presentation>WELL</mf:presentation>
 					<mf:thumb>morfeu/proxy/assets/images/release-thumb.svg</mf:thumb>
 					<mf:cell-presentation>morfeu/proxy/assets/images/release-cell.svg</mf:cell-presentation>
 					<mf:identifier name="@name" />
@@ -81,7 +81,7 @@
 			<xs:appinfo>
 			<mf:metadata>
 				<mf:desc>Arbitrary key value pairs for filtering releases (to be implemented)</mf:desc>
-				<mf:presentation>COL-WELL</mf:presentation>
+				<mf:presentation>WELL</mf:presentation>
 				<mf:thumb>morfeu/proxy/assets/images/labels-thumb.svg</mf:thumb>
 				<mf:transform case="yaml-to-xml" type="attribute">size="4"</mf:transform>
 			</mf:metadata>
