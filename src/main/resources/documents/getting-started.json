@@ -1,0 +1,7 @@
+{
+	"name": "Getting started"
+	,"desc": "Prometheus example"
+	,"kind": "yaml"
+	,"modelURI": "target/classes/models/helmfile-model.xsd"
+	,"contentURI": "target/classes/documents/getting-started.yaml"
+}

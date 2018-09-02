@@ -3,6 +3,8 @@
 	,"desc": "Catalogue of Helmfiles"
 	,"documents": [
 			{ "name":"Empty desired states", "kind": "yaml", "uri":"documents/empty.json" }
+			,{ "name":"Getting started", "kind": "yaml", "uri":"documents/getting-started.json" }
+			,{ "name":"Example", "kind": "yaml", "uri":"documents/getting-started.json" }
 	]
 	,"snippets": [
 	]

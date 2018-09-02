@@ -86,6 +86,7 @@
 						<webInfIncludeJarPattern>^$</webInfIncludeJarPattern>
 						<resourceBases>
 							<resourceBase>${project.build.outputDirectory}</resourceBase>	<!-- data files for angular app -->
+							<resourceBase>${project.build.directory}/..</resourceBase>	<!-- proxyied files, starting with target/..., for test data compatibility -->
 						</resourceBases>
 					</webApp>
 					<!--scanTargetPatterns> this is a terrible idea, it seems that it opens all the files <scanTargetPattern> 
@@ -142,6 +143,15 @@
 			<version>${morfeu-version}</version>
 			<classifier>classes</classifier>	<!-- this is how the extra jar is generated in morfeu -->
 		</dependency>
+		<dependency>
+			<groupId>cat.calidos.morfeu</groupId>
+			<artifactId>morfeu-webapp</artifactId>	
+			<version>${morfeu-version}</version>
+			<classifier>tests</classifier>	<!-- this is how the extra test jar is generated in morfeu -->
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+
 
 		<!-- DEPENDENCY INJECTION -->
 		<dependency>
@@ -228,6 +238,12 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>2.18.3</version>
 			<scope>test</scope>
 		</dependency>
 

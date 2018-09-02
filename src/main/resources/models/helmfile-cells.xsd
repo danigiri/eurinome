@@ -5,7 +5,7 @@
 
 	<xs:annotation>
 		<xs:documentation>
-		XML Schema for helmfile declarations
+		XML Schema for helmfile declarative spec cell definitions
 		</xs:documentation>
 	</xs:annotation>
 
@@ -13,16 +13,118 @@
 	<!-- this is a hack that should be configurable -->
 	<xs:include schemaLocation="http://localhost:8080/morfeu/test-resources/models/test-types.xsd"/>
 
-	<xs:complexType name="desiredState">
+
+	<xs:complexType name="helmRepository">
 		<xs:annotation>
 			<xs:appinfo>
 				<mf:metadata>
-					<mf:desc>Landscaper desired state</mf:desc>
+					<mf:desc>Helm chart repository information</mf:desc>
+					<mf:thumb>morfeu/proxy/assets/images/repo-thumb.svg</mf:thumb>
+					<mf:cell-presentation>morfeu/proxy/assets/images/repo-cell.svg</mf:cell-presentation>
+					<mf:transform case="obj-to-yaml" type="directive">LISTS-NO-PLURAL</mf:transform>
+					<mf:transform case="yaml-to-xml" type="directive">LISTS-NO-PLURAL</mf:transform>
+					<mf:identifier name="@name" />
 				</mf:metadata>
 			</xs:appinfo>
 		</xs:annotation>
-		<xs:attribute name="file" type="textField" use="required"/>
-		<xs:attribute name="verbose" type="booleanField" />
+		<xs:attribute name="name" use="required" type="textField" />
+		<xs:attribute name="url" use="required" type="textField" />
+		<xs:attribute name="certFile" type="textField" />
+		<xs:attribute name="keyFile" type="textField" />
+		<xs:attribute name="username" type="textField" />
+		<xs:attribute name="password" type="textField" />
 	</xs:complexType>
+
+	<xs:complexType name="helmDefaultsConfig">
+		<xs:annotation>
+			<xs:appinfo>
+				<mf:metadata>
+					<mf:desc>default values to set for args along with dedicated keys that can be set by contributers, cli args take precedence overe these</mf:desc>
+					<mf:presentation>WELL</mf:presentation>
+					<mf:thumb>morfeu/proxy/assets/images/helmdefaults-thumb.svg</mf:thumb>
+				</mf:metadata>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="arg" type="textField" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="tillerNamespace" type="textField" />
+		<xs:attribute name="kubeContext" type="textField" />
+	</xs:complexType>
+
+	<xs:complexType name="releaseCellModel">
+		<xs:annotation>
+			<xs:appinfo>
+				<mf:metadata>
+					<mf:desc>Published chart</mf:desc>
+					<mf:presentation>ROW-WELL</mf:presentation>
+					<mf:thumb>morfeu/proxy/assets/images/release-thumb.svg</mf:thumb>
+					<mf:cell-presentation>morfeu/proxy/assets/images/release-cell.svg</mf:cell-presentation>
+					<mf:identifier name="@name" />
+				</mf:metadata>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+				<xs:element name="label" type="labelsCol" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="value" type="textContent" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="secret" type="textField" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="set" type="setCellModel" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" use="required" type="textField" />
+		<xs:attribute name="namespace" use="required" type="textField" />
+		<xs:attribute name="chart" use="required" type="textField" />
+		<xs:attribute name="version" type="textField" />
+	</xs:complexType>
+
+	<xs:complexType name="labelsCol">
+		<xs:annotation>
+			<xs:appinfo>
+			<mf:metadata>
+				<mf:desc>Arbitrary key value pairs for filtering releases (to be implemented)</mf:desc>
+				<mf:presentation>COL-WELL</mf:presentation>
+				<mf:thumb>morfeu/proxy/assets/images/labels-thumb.svg</mf:thumb>
+				<mf:transform case="yaml-to-xml" type="attribute">size="4"</mf:transform>
+			</mf:metadata>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!--xs:complexType name="setsCol">
+		<xs:annotation>
+			<xs:appinfo>
+			<mf:metadata>
+				<mf:desc>values (set)</mf:desc>
+				<mf:presentation>COL-WELL</mf:presentation>
+				<mf:thumb>morfeu/proxy/assets/images/sets-thumb.svg</mf:thumb>
+				<mf:transform case="yaml-to-xml" type="attribute">size="4"</mf:transform>
+				<mf:transform case="obj-to-yaml" type="directive">LISTS-NO-PLURAL</mf:transform>
+				<mf:transform case="yaml-to-xml" type="directive">LISTS-NO-PLURAL</mf:transform>
+			</mf:metadata>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="set" type="setCellModel" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType-->
+
+	<xs:complexType name="setCellModel">
+		<xs:annotation>
+			<xs:appinfo>
+				<mf:metadata>
+					<mf:desc>testIdCell desc (one field identifier)</mf:desc>
+					<mf:thumb>morfeu/proxy/assets/images/set-thumb.svg</mf:thumb>
+					<mf:cell-presentation>morfeu/proxy/assets/images/set-cell.svg</mf:cell-presentation>
+					<mf:transform case="obj-to-yaml" type="directive">LISTS-NO-PLURAL</mf:transform>
+					<mf:transform case="yaml-to-xml" type="directive">LISTS-NO-PLURAL</mf:transform>
+					<mf:identifier name="@name" />
+				</mf:metadata>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:attribute name="name" use="required" type="textField" />
+		<xs:attribute name="value" use="required"  type="textField" />
+	</xs:complexType>
+
 
 </xs:schema>
