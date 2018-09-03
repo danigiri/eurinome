@@ -5,35 +5,33 @@
 
 	<xs:annotation>
 		<xs:appinfo>
-			<mf:desc>Helmfile definitions< meta-model/mf:desc>
+			<mf:desc>Helmfile definitions</mf:desc>
 		</xs:appinfo>
 	</xs:annotation>
 
-<!-- this is a hack that should be configurable -->
 <xs:include schemaLocation="http://localhost:8080/morfeu/test-resources/models/test-types.xsd"/>
-<xs:include schemaLocation="helmfile-cells.xsd"/>
 
-<xs:element name="helmfile">
+
+<xs:element name="helmfilel">
 		<xs:annotation>
 			<xs:appinfo>
 				<mf:metadata>
 					<mf:desc>Helmfile definitions and spec root holder, does not appear in the YAML</mf:desc>
 					<mf:presentation>WELL</mf:presentation>
-					<mf:thumb>morfeu/proxy/assets/images/helmfile-thumb.svg</mf:thumb>
+					<mf:thumb>morfeu/proxy/assets/images/helmfile-thumb.svg</mf:thumb>	
 					<mf:transform case="obj-to-yaml" type="directive">ATTRIBUTES-ONLY</mf:transform>
 					<mf:transform case="yaml-to-xml" type="directive">ATTRIBUTES-ONLY</mf:transform>
 					<mf:transform case="yaml-to-xml" type="attribute">xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</mf:transform>
-					<mf:transform case="yaml-to-xml" type="attribute">xsi:noNamespaceSchemaLocation="../models/helmfile-model.xsd"</mf:transform>
+					<mf:transform case="yaml-to-xml" type="attribute">xsi:noNamespaceSchemaLocation="../models/helmfile-list-model.xsd"</mf:transform>
 				</mf:metadata>
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="repositories" type="helmRepository" minOccurs="0" maxOccurs="unbounded"/>
-				<xs:element name="context" type="textField" minOccurs="0" maxOccurs="1"/>
-				<xs:element name="helmDefaults" type="helmDefaultsConfig" minOccurs="0" maxOccurs="1"/>
-				<xs:element name="release" type="releaseCellModel" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="repositories" type="helmfile" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
+			<xs:attribute name="namespace" type="textField" />
+			<xs:attribute name="kube-context" type="textField" />
 		</xs:complexType>
 	</xs:element>
 

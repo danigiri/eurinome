@@ -1,0 +1,9 @@
+{
+	"name": "Helmfile desired states list"
+	,"desc": "List of different helmfile desired states"
+	,"documents": [
+			{ "name":"Empty desired states", "kind": "yaml", "uri":"documents/empty.json" }
+	]
+	,"snippets": [
+	]
+	}
