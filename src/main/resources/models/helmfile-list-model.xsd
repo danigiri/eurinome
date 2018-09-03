@@ -13,26 +13,45 @@
 
 
 <xs:element name="helmfilel">
-		<xs:annotation>
-			<xs:appinfo>
-				<mf:metadata>
-					<mf:desc>Helmfile definitions and spec root holder, does not appear in the YAML</mf:desc>
-					<mf:presentation>WELL</mf:presentation>
-					<mf:thumb>morfeu/proxy/assets/images/helmfile-thumb.svg</mf:thumb>	
-					<mf:transform case="obj-to-yaml" type="directive">ATTRIBUTES-ONLY</mf:transform>
-					<mf:transform case="yaml-to-xml" type="directive">ATTRIBUTES-ONLY</mf:transform>
-					<mf:transform case="yaml-to-xml" type="attribute">xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</mf:transform>
-					<mf:transform case="yaml-to-xml" type="attribute">xsi:noNamespaceSchemaLocation="../models/helmfile-list-model.xsd"</mf:transform>
-				</mf:metadata>
-			</xs:appinfo>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="repositories" type="helmfile" minOccurs="0" maxOccurs="unbounded"/>
-			</xs:sequence>
-			<xs:attribute name="namespace" type="textField" />
-			<xs:attribute name="kube-context" type="textField" />
-		</xs:complexType>
-	</xs:element>
+	<xs:annotation>
+		<xs:appinfo>
+			<mf:metadata>
+				<mf:desc>Helmfile definitions and spec root holder, does not appear in the YAML</mf:desc>
+				<mf:presentation>WELL</mf:presentation>
+				<mf:thumb>morfeu/proxy/assets/images/helmfile-thumb.svg</mf:thumb>	
+				<mf:transform case="yaml-to-xml" type="attribute">xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</mf:transform>
+				<mf:transform case="yaml-to-xml" type="attribute">xsi:noNamespaceSchemaLocation="../models/helmfile-list-model.xsd"</mf:transform>
+			</mf:metadata>
+		</xs:appinfo>
+	</xs:annotation>
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="repositories" type="helmfile" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="namespace" type="textField" />
+		<xs:attribute name="kube-context" type="textField" />
+	</xs:complexType>
+</xs:element>
+<xs:element name="selectors">
+	<xs:annotation>
+		<xs:appinfo>
+			<mf:metadata>
+				<mf:desc>Only run using the releases that match labels. Labels can take the form of foo=bar or foo!=bar.</mf:desc>
+				<mf:presentation>WELL</mf:presentation>
+				<mf:thumb>morfeu/proxy/assets/images/helmfile-thumb.svg</mf:thumb>	
+				<mf:transform case="yaml-to-xml" type="attribute">xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</mf:transform>
+				<mf:transform case="yaml-to-xml" type="attribute">xsi:noNamespaceSchemaLocation="../models/helmfile-list-model.xsd"</mf:transform>
+			</mf:metadata>
+		</xs:appinfo>
+	</xs:annotation>
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="repositories" type="selector" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="namespace" type="textField" />
+		<xs:attribute name="kube-context" type="textField" />
+	</xs:complexType>
+</xs:element>
+
 
 </xs:schema>
