@@ -5,7 +5,7 @@
 
 	<xs:annotation>
 		<xs:appinfo>
-			<mf:desc>Helmfile definitions< meta-model/mf:desc>
+			<mf:desc>Helmfile definitions</mf:desc>
 		</xs:appinfo>
 	</xs:annotation>
 

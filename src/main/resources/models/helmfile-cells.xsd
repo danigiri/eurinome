@@ -52,6 +52,24 @@
 		<xs:attribute name="kubeContext" type="textField" />
 	</xs:complexType>
 
+
+	<xs:complexType name="label">
+		<xs:annotation>
+			<xs:appinfo>
+				<mf:metadata>
+					<mf:desc>Arbitrary key value pairs for filtering releases</mf:desc>
+					<mf:thumb>morfeu/proxy/assets/images/label-thumb.svg</mf:thumb>
+					<mf:cell-presentation>morfeu/proxy/assets/images/label-cell.svg</mf:cell-presentation>
+					<mf:transform case="obj-to-yaml" type="directive">KEY-VALUE</mf:transform>
+					<mf:transform case="yaml-to-xml" type="directive">KEY-VALUE</mf:transform>
+					<mf:identifier name="@key" />
+				</mf:metadata>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:attribute name="key" use="required" type="textField" />
+		<xs:attribute name="value" type="textField" />
+	</xs:complexType>
+
 	<xs:complexType name="releaseCellModel">
 		<xs:annotation>
 			<xs:appinfo>
@@ -65,7 +83,7 @@
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:sequence>
-				<xs:element name="label" type="labelsCol" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="label" type="label" minOccurs="0" maxOccurs="unbounded"/>
 				<xs:element name="value" type="textContent" minOccurs="0" maxOccurs="unbounded"/>
 				<xs:element name="secret" type="textField" minOccurs="0" maxOccurs="unbounded"/>
 				<xs:element name="set" type="setCellModel" minOccurs="0" maxOccurs="unbounded"/>
@@ -75,39 +93,6 @@
 		<xs:attribute name="chart" use="required" type="textField" />
 		<xs:attribute name="version" type="textField" />
 	</xs:complexType>
-
-	<xs:complexType name="labelsCol">
-		<xs:annotation>
-			<xs:appinfo>
-			<mf:metadata>
-				<mf:desc>Arbitrary key value pairs for filtering releases (to be implemented)</mf:desc>
-				<mf:presentation>WELL</mf:presentation>
-				<mf:thumb>morfeu/proxy/assets/images/labels-thumb.svg</mf:thumb>
-				<mf:transform case="yaml-to-xml" type="attribute">size="4"</mf:transform>
-			</mf:metadata>
-			</xs:appinfo>
-		</xs:annotation>
-		<xs:sequence>
-		</xs:sequence>
-	</xs:complexType>
-
-	<!--xs:complexType name="setsCol">
-		<xs:annotation>
-			<xs:appinfo>
-			<mf:metadata>
-				<mf:desc>values (set)</mf:desc>
-				<mf:presentation>COL-WELL</mf:presentation>
-				<mf:thumb>morfeu/proxy/assets/images/sets-thumb.svg</mf:thumb>
-				<mf:transform case="yaml-to-xml" type="attribute">size="4"</mf:transform>
-				<mf:transform case="obj-to-yaml" type="directive">LISTS-NO-PLURAL</mf:transform>
-				<mf:transform case="yaml-to-xml" type="directive">LISTS-NO-PLURAL</mf:transform>
-			</mf:metadata>
-			</xs:appinfo>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="set" type="setCellModel" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType-->
 
 	<xs:complexType name="setCellModel">
 		<xs:annotation>
