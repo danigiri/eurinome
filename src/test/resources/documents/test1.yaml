@@ -1,0 +1,11 @@
+%YAML 1.2
+---
+repositories:
+  - name: roboll
+    url: http://roboll.io/charts
+    certFile: optional_client_cert
+    keyFile: optional_client_key
+    username: optional_username
+    password: optional_password
+
+context: kube-context					 # kube-context (--kube-context)

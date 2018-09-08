@@ -6,6 +6,22 @@
 	<xs:annotation>
 		<xs:appinfo>
 			<mf:desc>Helmfile definitions</mf:desc>
+			<mf:extra-metadata>
+				<mf:metadata uri="helmfile/context">
+					<mf:desc>kube-context (--kube-context)</mf:desc>
+					<mf:thumb>morfeu/proxy/assets/images/context-thumb.svg</mf:thumb>
+					<mf:cell-presentation>morfeu/proxy/assets/images/context-cell.svg</mf:cell-presentation>
+					<mf:transform case="obj-to-yaml" type="directive">LISTS-NO-PLURAL</mf:transform>
+					<mf:transform case="yaml-to-xml" type="directive">LISTS-NO-PLURAL</mf:transform>
+				</mf:metadata>
+				<mf:metadata uri="helmfile/release/value">
+					<mf:desc>value files (--values)</mf:desc>
+					<mf:thumb>morfeu/proxyassets/images/value-thumb.svg</mf:thumb>
+					<mf:cell-presentation>morfeu/proxyassets/images/value-cell.svg</mf:cell-presentation>
+					<mf:transform case="obj-to-yaml" type="directive">LISTS-NO-PLURAL</mf:transform>
+					<mf:transform case="yaml-to-xml" type="directive">LISTS-NO-PLURAL</mf:transform>
+				</mf:metadata>
+			</mf:extra-metadata>
 		</xs:appinfo>
 	</xs:annotation>
 
@@ -30,7 +46,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="repositories" type="helmRepository" minOccurs="0" maxOccurs="unbounded"/>
-				<xs:element name="context" type="textField" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="context" type="textContentOneLine" minOccurs="0" maxOccurs="1"/>
 				<xs:element name="helmDefaults" type="helmDefaultsConfig" minOccurs="0" maxOccurs="1"/>
 				<xs:element name="release" type="releaseCellModel" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>

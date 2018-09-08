@@ -1,0 +1,7 @@
+{
+	"name": "Test 1"
+	,"desc": "First test"
+	,"kind": "yaml"
+	,"modelURI": "models/helmfile-model.xsd"
+	,"contentURI": "documents/test1.yaml"
+}

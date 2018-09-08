@@ -13,12 +13,11 @@
 	<!-- this is a hack that should be configurable -->
 	<xs:include schemaLocation="http://localhost:8080/morfeu/test-resources/models/test-types.xsd"/>
 
-
 	<xs:complexType name="helmRepository">
 		<xs:annotation>
 			<xs:appinfo>
 				<mf:metadata>
-					<mf:desc>Helm chart repository information</mf:desc>
+					<mf:desc>Repositories</mf:desc>
 					<mf:thumb>morfeu/proxy/assets/images/repo-thumb.svg</mf:thumb>
 					<mf:cell-presentation>morfeu/proxy/assets/images/repo-cell.svg</mf:cell-presentation>
 					<mf:transform case="obj-to-yaml" type="directive">LISTS-NO-PLURAL</mf:transform>
@@ -52,7 +51,6 @@
 		<xs:attribute name="kubeContext" type="textField" />
 	</xs:complexType>
 
-
 	<xs:complexType name="label">
 		<xs:annotation>
 			<xs:appinfo>
@@ -83,10 +81,10 @@
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:sequence>
-				<xs:element name="label" type="label" minOccurs="0" maxOccurs="unbounded"/>
-				<xs:element name="value" type="textContent" minOccurs="0" maxOccurs="unbounded"/>
-				<xs:element name="secret" type="textField" minOccurs="0" maxOccurs="unbounded"/>
-				<xs:element name="set" type="setCellModel" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="label" type="label" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="value" type="textContent" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="secret" type="textField" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="set" type="setCellModel" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="name" use="required" type="textField" />
 		<xs:attribute name="namespace" use="required" type="textField" />

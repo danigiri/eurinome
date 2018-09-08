@@ -39,7 +39,7 @@ releases:
     set:                                   # values (--set)
       - name: address
         value: https://vault.example.com
-# NEED TO NEST THIS, AS WELL AS THE ARGS
+# WE HAVE CONFLICT WITH RESERVED CHAR
 #      - name: db.password
 #        value: '{{ requiredEnv "DB_PASSWORD" }}'
 #      - name: proxy.domain

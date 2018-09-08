@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<helmfile	xsi:noNamespaceSchemaLocation="../models/helmfile-model.xsd" 
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<repositories 	username="optional_username" 
+					keyFile="optional_client_key" 
+					certFile="optional_client_cert" 
+					password="optional_password" 
+					url="http://roboll.io/charts" name="roboll"/>
+	<context>kube-context</context>
+
+</helmfile>

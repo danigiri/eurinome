@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="69.6pt" height="56pt" viewBox="0 0 69.6 56" version="1.1">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="69.6pt" height="40.8pt" viewBox="0 0 69.6 40.8" version="1.1">
 <defs>
 <g>
 <symbol overflow="visible" id="glyph0-0">
@@ -20,12 +20,12 @@
 </g>
 </defs>
 <g id="surface1">
-<path style="fill-rule:nonzero;fill:rgb(83.74176%,83.743286%,83.74176%);fill-opacity:1;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 196.757812 107.714844 L 270.961914 107.714844 C 273.168945 107.714844 274.960938 109.506836 274.960938 111.71875 L 274.960938 168.911133 C 274.960938 171.123047 273.168945 172.915039 270.961914 172.915039 L 196.757812 172.915039 C 194.545898 172.915039 192.753906 171.123047 192.753906 168.911133 L 192.753906 111.71875 C 192.753906 109.506836 194.545898 107.714844 196.757812 107.714844 Z M 196.757812 107.714844 " transform="matrix(0.8,0,0,0.8,-152,-84)"/>
+<path style="fill-rule:nonzero;fill:rgb(83.74176%,83.743286%,83.74176%);fill-opacity:1;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 213.762695 73.700195 L 287.966797 73.700195 C 290.178711 73.700195 291.970703 75.492188 291.970703 77.699219 L 291.970703 115.052734 C 291.970703 117.264648 290.178711 119.056641 287.966797 119.056641 L 213.762695 119.056641 C 211.555664 119.056641 209.763672 117.264648 209.763672 115.052734 L 209.763672 77.699219 C 209.763672 75.492188 211.555664 73.700195 213.762695 73.700195 Z M 213.762695 73.700195 " transform="matrix(0.8,0,0,0.8,-165.6,-56.8)"/>
 <g style="fill:rgb(0%,0%,0%);fill-opacity:1;">
-  <use xlink:href="#glyph0-1" x="17.07061" y="33.266325"/>
-  <use xlink:href="#glyph0-2" x="26.31221" y="33.266325"/>
-  <use xlink:href="#glyph0-3" x="34.60661" y="33.266325"/>
-  <use xlink:href="#glyph0-4" x="43.14421" y="33.266325"/>
+  <use xlink:href="#glyph0-1" x="17.07691" y="25.316715"/>
+  <use xlink:href="#glyph0-2" x="26.31851" y="25.316715"/>
+  <use xlink:href="#glyph0-3" x="34.61291" y="25.316715"/>
+  <use xlink:href="#glyph0-4" x="43.15051" y="25.316715"/>
 </g>
 </g>
 </svg>

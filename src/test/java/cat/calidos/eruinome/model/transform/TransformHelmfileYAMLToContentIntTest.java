@@ -27,15 +27,15 @@ public class TransformHelmfileYAMLToContentIntTest extends TransformTezt {
 
 
 @Test
-public void testTransformUsingTemplateGettingStarted() throws Exception {
+public void testTransformUsingTemplateTest1() throws Exception {
 
-	String yamlPath = "target/classes/documents/getting-started.yaml";
+	String yamlPath = "target/test-classes/documents/test1.yaml";
 	String documentPath = "documents/getting-started.json";
-	//String xmlPath = "src/test/resources/test-resources/documents/document1.xml";
+	String xmlPath = "target/test-classes/documents/test1.xml";
 
 	String transformed = transformYAMLToXML(yamlPath, documentPath);
 	System.err.println(transformed);
-	//compareWithXML(transformed,  xmlPath);
+	compareWithXML(transformed,  xmlPath);
 
 }
 
