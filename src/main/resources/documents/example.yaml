@@ -39,13 +39,12 @@ releases:
     set:                                   # values (--set)
       - name: address
         value: https://vault.example.com
-# WE HAVE CONFLICT WITH RESERVED CHAR
-#      - name: db.password
-#        value: '{{ requiredEnv "DB_PASSWORD" }}'
-#      - name: proxy.domain
-#        value: '{{ requiredEnv "PLATFORM_ID" }}.my-domain.com'
-#      - name: proxy.scheme
-#        value: '{{ env "SCHEME" | default "https" }}'
+      - name: db.password
+        value: '{{ requiredEnv "DB_PASSWORD" }}'
+      - name: proxy.domain
+        value: '{{ requiredEnv "PLATFORM_ID" }}.my-domain.com'
+      - name: proxy.scheme
+        value: '{{ env "SCHEME" | default "https" }}'
 
   # Local chart example
   - name: grafana                            # name of this release
