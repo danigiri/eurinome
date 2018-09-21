@@ -31,9 +31,10 @@ releases:
     version: ~1.24.1                       # the semver of the chart. range constraint is supported
     values:
       - vault.yaml                         # value files (--values)
-# NOT SUPPORTED     - db:                                # inline values. Passed via a temporary values file (--values)
-#          username: {{ requiredEnv "DB_USERNAME" }}
-#          password: {{ requiredEnv "DB_PASSWORD" }}
+# NOT SUPPORTED
+#      - db:                                # inline values. Passed via a temporary values file (--values)
+#          username: '{{ requiredEnv "DB_USERNAME" }}'
+#          password: '{{ requiredEnv "DB_PASSWORD" }}'
     secrets:
       - vault_secret.yaml                  # will attempt to decrypt it using helm-secrets plugin
     set:                                   # values (--set)

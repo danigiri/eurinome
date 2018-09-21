@@ -18,8 +18,6 @@
 					<mf:desc>value files (--values)</mf:desc>
 					<mf:thumb>morfeu/proxy/assets/images/value-thumb.svg</mf:thumb>
 					<mf:cell-presentation>morfeu/proxy/assets/images/value-cell.svg</mf:cell-presentation>
-					<mf:transform case="obj-to-yaml" type="directive">LISTS-NO-PLURAL</mf:transform>
-					<mf:transform case="yaml-to-xml" type="directive">LISTS-NO-PLURAL</mf:transform>
 				</mf:metadata>
 				<mf:metadata uri="helmfile/release/secret">
 					<mf:desc>will attempt to decrypt it using helm-secrets plugin</mf:desc>
