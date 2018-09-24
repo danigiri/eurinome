@@ -14,19 +14,16 @@
  *   limitations under the License.
  */
 
-package cat.calidos.eurinome.runtime.api;
-
+package cat.calidos.eurinome.problems;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public interface RunningTask extends Task {
+public class EurinomeRuntimeException extends RuntimeException {
 
 
-public boolean isComplete();
-
-
-public StoppingTask stop();
-
+public EurinomeRuntimeException(String message, Throwable e) {
+	super(message+"("+e.getMessage()+")", e);
+}
 
 }

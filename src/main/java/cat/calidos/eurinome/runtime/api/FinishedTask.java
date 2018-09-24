@@ -1,4 +1,4 @@
-package cat.calidos.eurinome.runtime;
+package cat.calidos.eurinome.runtime.api;
 
 
 public interface FinishedTask extends Task {

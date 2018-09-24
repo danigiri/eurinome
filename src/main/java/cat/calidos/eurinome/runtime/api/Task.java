@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package cat.calidos.eurinome.runtime;
+package cat.calidos.eurinome.runtime.api;
 
 
 /**
@@ -35,8 +35,6 @@ public static int LONG_RUNNING = 11;
 public int status();
 
 public int type();
-
-public ReadyTask clone();
 
 
 }

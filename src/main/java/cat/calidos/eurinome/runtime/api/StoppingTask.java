@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package cat.calidos.eurinome.runtime;
+package cat.calidos.eurinome.runtime.api;
 
 
 /**

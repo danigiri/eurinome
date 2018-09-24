@@ -14,19 +14,46 @@
  *   limitations under the License.
  */
 
-package cat.calidos.eurinome.runtime.api;
+package cat.calidos.eurinome.runtime;
 
+import cat.calidos.eurinome.runtime.api.ReadyTask;
+import cat.calidos.eurinome.runtime.api.Task;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public interface RunningTask extends Task {
+public class ExecTask implements Task {
+
+protected int type;
+protected int status;
 
 
-public boolean isComplete();
+public ExecTask(int type, int status) {
+	
+	this.type = type;
+	this.status = status;
+	
+}
 
 
-public StoppingTask stop();
+@Override
+public String show() {
+
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public int status() {
+	return status;
+}
+
+
+@Override
+public int type() {
+	return type;
+}
 
 
 }

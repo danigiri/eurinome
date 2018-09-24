@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package cat.calidos.eurinome.runtime;
+package cat.calidos.eurinome.runtime.api;
 
 
 /**
@@ -25,7 +25,7 @@ public interface StartingTask extends Task {
 
 public int remaining();
 
-public boolean hasStarted();
+public boolean hasFinishedStarting();
 
 public RunningTask runningTask() throws IllegalStateException;
 

@@ -14,19 +14,17 @@
  *   limitations under the License.
  */
 
-package cat.calidos.eurinome.runtime.api;
+package cat.calidos.eurinome.runtime;
 
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public interface RunningTask extends Task {
+public class HelmFileTask {
 
 
-public boolean isComplete();
-
-
-public StoppingTask stop();
-
+public HelmFileTask(String filePath) {
+	
+}
 
 }
