@@ -39,6 +39,7 @@
 					<mf:desc>Helmfile definitions and spec root holder, does not appear in the YAML</mf:desc>
 					<mf:presentation>WELL</mf:presentation>
 					<mf:thumb>morfeu/proxy/assets/images/helmfile-thumb.svg</mf:thumb>
+					<mf:cell-presentation>morfeu/proxy/assets/images/helmfile-cell.svg</mf:cell-presentation>
 					<mf:transform case="obj-to-yaml" type="directive">ATTRIBUTES-ONLY</mf:transform>
 					<mf:transform case="yaml-to-xml" type="directive">ATTRIBUTES-ONLY</mf:transform>
 					<mf:transform case="yaml-to-xml" type="attribute">xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</mf:transform>
