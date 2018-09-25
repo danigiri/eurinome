@@ -1,5 +1,3 @@
-%YAML 1.2
----
 repositories:
   - name: roboll
     url: http://roboll.io/charts
