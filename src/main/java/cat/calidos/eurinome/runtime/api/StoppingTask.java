@@ -23,9 +23,7 @@ package cat.calidos.eurinome.runtime.api;
 public interface StoppingTask extends Task {
 
 
-public boolean hasStopped();
-
-
 public FinishedTask finishedTask() throws IllegalStateException;
+
 
 }

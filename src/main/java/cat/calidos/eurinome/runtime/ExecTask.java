@@ -16,7 +16,10 @@
 
 package cat.calidos.eurinome.runtime;
 
+import java.util.function.Function;
+
 import cat.calidos.eurinome.runtime.api.ReadyTask;
+import cat.calidos.eurinome.runtime.api.StartingTask;
 import cat.calidos.eurinome.runtime.api.Task;
 
 /**
@@ -26,13 +29,23 @@ public class ExecTask implements Task {
 
 protected int type;
 protected int status;
-
+private Function<String, Integer> matcher;
+private int remaining;
 
 public ExecTask(int type, int status) {
 	
 	this.type = type;
 	this.status = status;
+	this.remaining = MAX_REMAINING;
+}
+
+
+public ExecTask(int type, int status, Function<String, Integer> matcher) {
+
+	this(type, status);
 	
+	this.matcher = matcher;
+
 }
 
 
@@ -53,6 +66,36 @@ public int status() {
 @Override
 public int type() {
 	return type;
+}
+
+
+@Override
+public void setRemaining(int percent) {
+
+	if (percent>MAX_REMAINING) {
+		throw new IndexOutOfBoundsException("");
+	}
+	
+	
+	
+}
+
+
+@Override
+public Function<String, Integer> outputMatcher() {
+	return matcher;
+}
+
+
+@Override
+public int getRemaining() {
+	return remaining;
+}
+
+
+@Override
+public boolean isDone() {
+	return remaining<=0;
 }
 
 

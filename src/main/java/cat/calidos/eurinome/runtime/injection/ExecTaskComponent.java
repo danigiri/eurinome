@@ -14,16 +14,29 @@
  *   limitations under the License.
  */
 
-package cat.calidos.eurinome.runtime.api;
+package cat.calidos.eurinome.runtime.injection;
 
+import dagger.BindsInstance;
+import dagger.producers.ProductionComponent;
+
+import javax.inject.Named;
+
+import cat.calidos.morfeu.utils.injection.ListeningExecutorServiceModule;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public interface RunningTask extends Task {
+@ProductionComponent(modules={ListeningExecutorServiceModule.class})
+public interface ExecTaskComponent {
 
 
-public StoppingTask stop();
+@ProductionComponent.Builder
+interface Builder {
 
+	@BindsInstance Builder path(@Named("Path") String path);
+
+	ExecTaskComponent build();
+
+}
 
 }

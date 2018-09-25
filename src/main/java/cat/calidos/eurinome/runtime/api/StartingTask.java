@@ -22,11 +22,6 @@ package cat.calidos.eurinome.runtime.api;
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public interface StartingTask extends Task {
 
-
-public int remaining();
-
-public boolean hasFinishedStarting();
-
 public RunningTask runningTask() throws IllegalStateException;
 
 public StoppingTask cancel();

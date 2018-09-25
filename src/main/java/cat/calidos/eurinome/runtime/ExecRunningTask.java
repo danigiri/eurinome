@@ -16,67 +16,21 @@
 
 package cat.calidos.eurinome.runtime;
 
-import org.zeroturnaround.exec.StartedProcess;
-
 import cat.calidos.eurinome.runtime.api.RunningTask;
-import cat.calidos.eurinome.runtime.api.StartingTask;
 import cat.calidos.eurinome.runtime.api.StoppingTask;
 
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public class ExecStartedTask extends ExecTask implements StartingTask {
+public class ExecRunningTask extends ExecTask implements RunningTask {
 
-private StartedProcess startedProcess;
-
-
-public ExecStartedTask(int type) {
-		super(type, STARTING);
-}
-
-
-public ExecStartedTask setStartedProcess(StartedProcess process){
-	
-	this.startedProcess = process;
-	
-	return this;
-	
+public ExecRunningTask(int type, int status) {
+	super(type, status);
 }
 
 @Override
-public int remaining() {
-
-	// TODO Auto-generated method stub
-	return 0;
-}
-
-
-public void finishedStarting() {
-
-	// TODO Auto-generated method stub
-	
-}
-
-
-@Override
-public boolean hasFinishedStarting() {
-
-	// TODO Auto-generated method stub
-	return false;
-}
-
-
-@Override
-public RunningTask runningTask() throws IllegalStateException {
-
-	// TODO Auto-generated method stub
-	return null;
-}
-
-
-@Override
-public StoppingTask cancel() {
+public StoppingTask stop() {
 
 	// TODO Auto-generated method stub
 	return null;

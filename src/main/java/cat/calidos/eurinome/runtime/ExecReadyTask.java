@@ -17,6 +17,9 @@
 package cat.calidos.eurinome.runtime;
 
 import java.io.IOException;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.zeroturnaround.exec.ProcessExecutor;
@@ -34,16 +37,29 @@ import cat.calidos.eurinome.runtime.api.StartingTask;
 public class ExecReadyTask extends ExecTask implements ReadyTask {
 
 private ProcessExecutor executor;
-private Predicate<String> match;
+protected ExecStartingTask startingTask;
+private BiConsumer<ExecRunningTask, String> startedCallback;
+private ExecRunningTask runningTask;
 
 
-public ExecReadyTask(int type, ProcessExecutor executor, Predicate<String> match) {
+public ExecReadyTask(int type, 
+						ProcessExecutor executor,
+						ExecStartingTask startingTask,
+						BiConsumer<ExecRunningTask, String> startedCallback,
+						ExecRunningTask runningTask
+						) {
 
 		super(type, IDLE);
-	
+
 		this.executor = executor;
-		this.match = match;
+		this.startingTask = startingTask;
+		this.startedCallback = startedCallback;
+		this.runningTask = runningTask;
 }
+
+
+
+
 
 
 @Override
@@ -51,21 +67,31 @@ public StartingTask start() {
 
 	try {
 
-		ExecStartedTask nextTaskState = new ExecStartedTask(type);
+		status = STARTING;
 		ProcessExecutor preparedExecutor = executor.redirectOutput(new LogOutputStream() {
 				@Override
 				protected void processLine(String line) {
 					System.out.println(line);
-					if (match.test(line)) {
-						nextTaskState.finishedStarting();
+					
+					switch(status) {
+						case STARTING:
+							int percent = startingTask.outputMatcher().apply(line);
+							startingTask.setRemaining(percent);
+							if (startingTask.isDone()) {
+								startedCallback.accept(runningTask, line); //TODO: accumulate all strings so far
+							}
+							break;
+					
 					}
+					
+					
 				}
 			});
 
 		StartedProcess process = preparedExecutor.start();
-		nextTaskState.setStartedProcess(process);
+		startingTask.setStartedProcess(process);
 		
-		return nextTaskState;
+		return startingTask;
 
 	} catch (IOException e) {
 		throw new EurinomeRuntimeException("Had a problem starting the task", e);
