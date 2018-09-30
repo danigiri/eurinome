@@ -16,39 +16,46 @@
 
 package cat.calidos.eurinome.runtime.injection;
 
-import dagger.BindsInstance;
-import dagger.Component;
-import dagger.producers.ProductionComponent;
-
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import javax.inject.Named;
 
-import com.google.common.util.concurrent.ListenableFuture;
+import org.zeroturnaround.exec.ProcessExecutor;
 
+import cat.calidos.eurinome.runtime.ExecReadyTask;
 import cat.calidos.eurinome.runtime.ExecRunningTask;
+import cat.calidos.eurinome.runtime.ExecStartingTask;
 import cat.calidos.eurinome.runtime.api.ReadyTask;
+import cat.calidos.eurinome.runtime.api.Task;
+import dagger.Module;
+import dagger.Provides;
+import dagger.producers.ProducerModule;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-@Component(modules={ExecTaskModule.class})
-public interface ExecTaskComponent {
+@Module
+public class ExecTaskModule {
+
+@Provides
+ReadyTask readyTask(@Named("Type") int type,
+					ProcessExecutor executor,
+					ExecStartingTask startingTask,
+					BiConsumer<ExecRunningTask, String> startedCallback,
+					ExecRunningTask runningTask) {
+	return new ExecReadyTask(type, executor, startingTask, startedCallback, runningTask);
+}
 
 
-ReadyTask readyTask();
+@Provides
+ProcessExecutor executor(@Named("Path") String path) {
+	return new ProcessExecutor().command(path);
+}
 
-
-@Component.Builder
-interface Builder {
-
-	@BindsInstance Builder path(@Named("Path") String path);
-	@BindsInstance Builder startedMatcher(@Named("StartedMatcher") Function<String, Integer> matcher);
-	@BindsInstance Builder startedCallback(@Named("StartedMatcher") BiConsumer<ExecRunningTask, String> callback);
-
-	ExecTaskComponent build();
-
+@Provides
+ExecStartingTask startingTask() {
+	
 }
 
 }
