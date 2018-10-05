@@ -29,6 +29,7 @@ import javax.inject.Named;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import cat.calidos.eurinome.runtime.ExecRunningTask;
+import cat.calidos.eurinome.runtime.ExecStartingTask;
 import cat.calidos.eurinome.runtime.api.ReadyTask;
 
 /**
@@ -36,7 +37,6 @@ import cat.calidos.eurinome.runtime.api.ReadyTask;
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Component(modules={ExecTaskModule.class})
 public interface ExecTaskComponent {
-
 
 ReadyTask readyTask();
 
@@ -47,7 +47,8 @@ interface Builder {
 	@BindsInstance Builder type(@Named("Type") int type);
 	@BindsInstance Builder exec(@Named("Path") String... command);
 	@BindsInstance Builder startedMatcher(@Named("StartedMatcher") Function<String, Integer> matcher);
-	@BindsInstance Builder startedCallback(@Named("Started") BiConsumer<ExecRunningTask, String> callback);
+	@BindsInstance Builder startedCallback(@Named("Started") BiConsumer<ExecStartingTask, ExecRunningTask> callback);
+	@BindsInstance Builder runningMatcher(@Named("RunningMatcher") Function<String, Integer> matcher);
 	@BindsInstance Builder problemMatcher(@Named("ProblemMatcher") Predicate<String> problemMatcher);
 
 	ExecTaskComponent build();

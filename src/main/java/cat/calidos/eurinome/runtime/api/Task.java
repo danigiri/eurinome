@@ -16,8 +16,6 @@
 
 package cat.calidos.eurinome.runtime.api;
 
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
 *	@author daniel giribet
@@ -26,9 +24,10 @@ public interface Task extends Showable {
 
 public static int READY = 1001;
 public static int STARTING = 1002;
-public static int RUNNING = 1003;
-public static int STOPPING = 1004;
-public static int FINISHED = 1005;
+public static int STARTED = 1003;
+public static int RUNNING = 1004;
+public static int STOPPING = 1005;
+public static int FINISHED = 1006;
 
 public static int NEXT = 0;
 public static int MAX = 100;
@@ -53,20 +52,34 @@ public int getStatus();
 public int getType();
 
 
+default public boolean isOneTime() {
+	return getType()==Task.ONE_TIME;
+}
+
+
+default public boolean isLongRunning() {
+	return getType()==Task.LONG_RUNNING;
+}
+
+
 public void setRemaining(int percent);
 
 
 public int getRemaining();
 
 
-public boolean isDone();
+default public boolean isDone() {
+	return getRemaining()==Task.NEXT;
+}
 
 
 /** Used in testing, block until status is reached */
 default void blockUntil(int status) {
+	
 	while (getStatus()!=status) {
 		Thread.onSpinWait();
 	}
+
 }
 
 

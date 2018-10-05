@@ -29,6 +29,7 @@ import org.zeroturnaround.exec.stream.LogOutputStream;
 import cat.calidos.eurinome.problems.EurinomeRuntimeException;
 import cat.calidos.eurinome.runtime.api.ReadyTask;
 import cat.calidos.eurinome.runtime.api.StartingTask;
+import cat.calidos.eurinome.runtime.api.Task;
 
 
 /**
@@ -38,23 +39,21 @@ public class ExecReadyTask extends ExecTask implements ReadyTask {
 
 private ProcessExecutor executor;
 protected ExecStartingTask startingTask;
-private BiConsumer<ExecRunningTask, String> startedCallback;
 private ExecRunningTask runningTask;
+private Process process;
 
 
-public ExecReadyTask(int type, 
-						ProcessExecutor executor,
-						ExecStartingTask startingTask,
-						BiConsumer<ExecRunningTask, String> startedCallback,
-						ExecRunningTask runningTask
-						) {
+public ExecReadyTask(int type, ProcessExecutor executor, ExecStartingTask startingTask, ExecRunningTask runningTask) {
 
 		super(type, READY);
 
 		this.executor = executor;
 		this.startingTask = startingTask;
-		this.startedCallback = startedCallback;
 		this.runningTask = runningTask;
+		System.out.println("Ready, running obj="+runningTask.toString());
+
+		startingTask.setRunningTask(runningTask);	// enforce the same instance
+
 }
 
 
@@ -65,38 +64,48 @@ public StartingTask start() {
 
 		status = STARTING;
 		ProcessExecutor preparedExecutor = executor.redirectOutput(new LogOutputStream() {
-				@Override
-				protected void processLine(String line) {
-					System.out.println(line);
-					System.out.println("status="+status);
-					
-					switch(status) {
-						case STARTING:
-							int percent = startingTask.matchesOutput(line);
-							startingTask.setRemaining(percent);
-							if (startingTask.isDone()) {
-								System.out.println("Task is started, running callback");
-								
-								startedCallback.accept(runningTask, line); //TODO: accumulate all strings so far
-							}
-							break;
-					
-					}
-					
-					
+			@Override
+			protected void processLine(String line) {
+				System.out.println(line);
+				int percent = Task.MAX;
+				switch(status) {
+					case STARTING:
+						startingTask.output.append(line);
+						percent = startingTask.matchesOutput(line);
+						startingTask.setRemaining(percent);
+						if (startingTask.isDone()) {
+							System.out.println("Task is started, running callback");
+							startingTask.markAsStarted();
+							status = RUNNING;
+						}
+						break;
+					case RUNNING:
+						runningTask.output.append(line);
+						if (isOneTime() && runningTask.isDone()) {
+							percent = runningTask.matchesOutput(line);
+							runningTask.setRemaining(percent);
+							//TODO: decide what to do if the actual process is not done yet
+						} else {
+							
+						}
+						break;
 				}
-			});
 
-		StartedProcess process = preparedExecutor.start();
-		startingTask.setStartedProcess(process);
+			}
+		});
+
+		process = preparedExecutor.start().getProcess();
+		process.onExit().thenAccept(a -> runningTask.markAsFinished());
+		startingTask.setProcess(process);
 		
 		return startingTask;
 
 	} catch (IOException e) {
 		throw new EurinomeRuntimeException("Had a problem starting the task", e);
 	}
-	
-	
+
 }
+
+
 
 }

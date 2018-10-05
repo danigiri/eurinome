@@ -25,5 +25,6 @@ public interface RunningTask extends Task {
 
 public StoppingTask stop();
 
+public FinishedTask markAsFinished();
 
 }

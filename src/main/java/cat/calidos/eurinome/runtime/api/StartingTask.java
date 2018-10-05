@@ -24,6 +24,8 @@ public interface StartingTask extends Task {
 
 public RunningTask runningTask() throws IllegalStateException;
 
+public RunningTask markAsStarted();
+
 public StoppingTask cancel();
 
 

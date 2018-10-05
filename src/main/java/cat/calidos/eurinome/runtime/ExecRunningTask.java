@@ -16,6 +16,10 @@
 
 package cat.calidos.eurinome.runtime;
 
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+import cat.calidos.eurinome.runtime.api.FinishedTask;
 import cat.calidos.eurinome.runtime.api.RunningTask;
 import cat.calidos.eurinome.runtime.api.StoppingTask;
 
@@ -25,14 +29,25 @@ import cat.calidos.eurinome.runtime.api.StoppingTask;
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class ExecRunningTask extends ExecTask implements RunningTask {
 
-public ExecRunningTask(int type) {
-	super(type, RUNNING);
+public ExecRunningTask(int type, Function<String, Integer> matcher, Predicate<String> problemMatcher) {
+	super(type, RUNNING, matcher, problemMatcher);
 }
+
 
 @Override
 public StoppingTask stop() {
 
 	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public FinishedTask markAsFinished() {
+
+	status = FINISHED;
+	setRemaining(NEXT);
+	
 	return null;
 }
 

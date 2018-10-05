@@ -22,6 +22,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import cat.calidos.eurinome.runtime.api.ReadyTask;
+import cat.calidos.eurinome.runtime.api.RunningTask;
 import cat.calidos.eurinome.runtime.api.StartingTask;
 import cat.calidos.eurinome.runtime.api.Task;
 import cat.calidos.eurinome.runtime.injection.DaggerExecTaskComponent;
@@ -32,26 +33,28 @@ import cat.calidos.eurinome.runtime.injection.DaggerExecTaskComponent;
 public class ExecTaskComponentIntTest {
 
 
-private String output;
-
-
 @Test @DisplayName("Exec one time task (IntTest)")
 public void testOneTimeExecTask() {
 
 	ReadyTask task = DaggerExecTaskComponent.builder()
-											.exec( "/bin/bash", "-c", "echo 'hello'")
-											.type(Task.ONE_TIME)
-											.startedMatcher(s -> s.equals("hello")? Task.NEXT : Task.MAX)
-											.startedCallback((r,o) -> {output = o;})
-											.problemMatcher(s -> false)
-											.build()
-											.readyTask();
+												.exec( "/bin/bash", "-c", "echo 'hello world'")
+												.type(Task.ONE_TIME)
+												.startedMatcher(s -> s.equals("hello world")? Task.NEXT : Task.MAX)
+												.startedCallback((s, r) -> {})
+												.runningMatcher(s -> Task.MAX)	// we wait for the process to finish
+												.problemMatcher(s -> false)
+												.build()
+												.readyTask();
 	assertFalse(task.isDone());
 	assertEquals(Task.READY, task.getStatus());
 	
 	StartingTask start = task.start();
-	start.blockUntil(Task.STARTING);
-	assertEquals("hello", output);
+	start.blockUntil(Task.STARTED);
+	assertEquals("hello world", start.show());
+	
+	RunningTask runningTask = start.runningTask();
+	runningTask.blockUntil(Task.FINISHED);
+	
 	
 }
 

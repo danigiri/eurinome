@@ -21,6 +21,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import org.zeroturnaround.exec.ProcessExecutor;
 
@@ -39,13 +40,13 @@ import dagger.producers.ProducerModule;
 @Module
 public class ExecTaskModule {
 
+
 @Provides
 ReadyTask readyTask(@Named("Type") int type,
 					ProcessExecutor executor,
 					ExecStartingTask startingTask,
-					@Named("Started") BiConsumer<ExecRunningTask, String> startedCallback,
-					ExecRunningTask runningTask) {
-	return new ExecReadyTask(type, executor, startingTask, startedCallback, runningTask);
+					@Named("RunningTask") ExecRunningTask runningTask) {
+	return new ExecReadyTask(type, executor, startingTask, runningTask);
 }
 
 
@@ -58,14 +59,22 @@ ProcessExecutor executor(@Named("Path") String... command) {
 @Provides
 ExecStartingTask startingTask(@Named("Type") int type, 
 								@Named("StartedMatcher") Function<String, Integer> matcher,
-								@Named("ProblemMatcher") Predicate<String> problemMatcher) {
-	return new ExecStartingTask(type, matcher, problemMatcher);
+								@Named("ProblemMatcher") Predicate<String> problemMatcher,
+								@Named("Started") BiConsumer<ExecStartingTask, ExecRunningTask> startedCallback,
+								@Named("RunningTask") ExecRunningTask runningTask) {
+	return new ExecStartingTask(type, matcher, problemMatcher, startedCallback, runningTask);
 }
 
 
-@Provides
-ExecRunningTask runningTask(@Named("Type") int type) {
-	return new ExecRunningTask(type);
+//TODO: this should be a singleton as new instances are being created
+@Provides @Named("RunningTask")
+ExecRunningTask runningTask(@Named("Type") int type,
+							@Named("RunningMatcher") Function<String, Integer> matcher,
+							@Named("ProblemMatcher") Predicate<String> problemMatcher) {
+	
+	final  ExecRunningTask runningTask = new ExecRunningTask(type, matcher, problemMatcher);
+	
+	return runningTask;
 }
 
 }

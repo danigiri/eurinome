@@ -19,6 +19,8 @@ package cat.calidos.eurinome.runtime;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import org.zeroturnaround.exec.StartedProcess;
+
 import cat.calidos.eurinome.runtime.api.Task;
 
 /**
@@ -31,12 +33,16 @@ protected int status;
 private Function<String, Integer> matcher;
 private int remaining;
 private Predicate<String> problemMatcher;
+protected Process process;
+protected StringBuilder output;
 
 public ExecTask(int type, int status) {
 	
 	this.type = type;
 	this.status = status;
 	this.remaining = MAX;
+	this.output = new StringBuilder();
+	
 }
 
 
@@ -47,6 +53,11 @@ public ExecTask(int type, int status, Function<String, Integer> matcher, Predica
 	this.matcher = matcher;
 	this.problemMatcher = problemMatcher;
 
+}
+
+
+public void setProcess(Process process) {
+	this.process = process;
 }
 
 
@@ -64,9 +75,7 @@ public boolean matchesProblem(String line) {
 
 @Override
 public String show() {
-
-	// TODO Auto-generated method stub
-	return null;
+	return output.toString();
 }
 
 

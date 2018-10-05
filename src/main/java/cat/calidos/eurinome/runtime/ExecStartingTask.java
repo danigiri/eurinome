@@ -16,6 +16,7 @@
 
 package cat.calidos.eurinome.runtime;
 
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -31,30 +32,33 @@ import cat.calidos.eurinome.runtime.api.StoppingTask;
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class ExecStartingTask extends ExecTask implements StartingTask {
 
-private StartedProcess startedProcess;
+private BiConsumer<ExecStartingTask, ExecRunningTask> startedCallback;
+private ExecRunningTask runningTask;
 
 
-public ExecStartingTask(int type, Function<String, Integer> matcher, Predicate<String> problemMatcher) {
+public ExecStartingTask(int type, 
+						Function<String, Integer> matcher, 
+						Predicate<String> problemMatcher,
+						BiConsumer<ExecStartingTask, ExecRunningTask> startedCallback,
+						ExecRunningTask runningTask
+						) {
 
 	super(type, STARTING, matcher, problemMatcher);
 	
+	this.startedCallback = startedCallback;
+	this.runningTask = runningTask;
+	System.out.println("Starting, running="+runningTask);
+
+
 }
 
-
-public ExecTask setStartedProcess(StartedProcess process){
-	
-	this.startedProcess = process;
-	
-	return this;
-	
+public void setRunningTask(ExecRunningTask runningTask) {
+	this.runningTask = runningTask;	//HACK: this is a hack as we are not creating singletons of running task in dagger
 }
-
 
 @Override
 public RunningTask runningTask() throws IllegalStateException {
-
-	// TODO Auto-generated method stub
-	return null;
+	return runningTask;
 }
 
 
@@ -63,6 +67,20 @@ public StoppingTask cancel() {
 
 	// TODO Auto-generated method stub
 	return null;
+}
+
+
+@Override
+public RunningTask markAsStarted() {
+	
+	status = STARTED;
+	setRemaining(NEXT);
+	runningTask.setProcess(process);
+	
+	startedCallback.accept(this, runningTask);
+
+	return runningTask;
+
 }
 
 }
