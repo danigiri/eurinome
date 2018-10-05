@@ -17,6 +17,7 @@
 package cat.calidos.eurinome.runtime;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.zeroturnaround.exec.StartedProcess;
 
@@ -33,9 +34,9 @@ public class ExecStartingTask extends ExecTask implements StartingTask {
 private StartedProcess startedProcess;
 
 
-public ExecStartingTask(int type, Function<String, Integer> matcher) {
+public ExecStartingTask(int type, Function<String, Integer> matcher, Predicate<String> problemMatcher) {
 
-	super(type, STARTING, matcher);
+	super(type, STARTING, matcher, problemMatcher);
 	
 }
 

@@ -18,6 +18,7 @@ package cat.calidos.eurinome.runtime.injection;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import javax.inject.Named;
 
@@ -42,20 +43,29 @@ public class ExecTaskModule {
 ReadyTask readyTask(@Named("Type") int type,
 					ProcessExecutor executor,
 					ExecStartingTask startingTask,
-					BiConsumer<ExecRunningTask, String> startedCallback,
+					@Named("Started") BiConsumer<ExecRunningTask, String> startedCallback,
 					ExecRunningTask runningTask) {
 	return new ExecReadyTask(type, executor, startingTask, startedCallback, runningTask);
 }
 
 
 @Provides
-ProcessExecutor executor(@Named("Path") String path) {
-	return new ProcessExecutor().command(path);
+ProcessExecutor executor(@Named("Path") String... command) {
+	return new ProcessExecutor().command(command);
 }
 
+
 @Provides
-ExecStartingTask startingTask() {
-	
+ExecStartingTask startingTask(@Named("Type") int type, 
+								@Named("StartedMatcher") Function<String, Integer> matcher,
+								@Named("ProblemMatcher") Predicate<String> problemMatcher) {
+	return new ExecStartingTask(type, matcher, problemMatcher);
+}
+
+
+@Provides
+ExecRunningTask runningTask(@Named("Type") int type) {
+	return new ExecRunningTask(type);
 }
 
 }

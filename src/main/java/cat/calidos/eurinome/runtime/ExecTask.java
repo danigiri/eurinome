@@ -17,9 +17,8 @@
 package cat.calidos.eurinome.runtime;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
-import cat.calidos.eurinome.runtime.api.ReadyTask;
-import cat.calidos.eurinome.runtime.api.StartingTask;
 import cat.calidos.eurinome.runtime.api.Task;
 
 /**
@@ -31,21 +30,35 @@ protected int type;
 protected int status;
 private Function<String, Integer> matcher;
 private int remaining;
+private Predicate<String> problemMatcher;
 
 public ExecTask(int type, int status) {
 	
 	this.type = type;
 	this.status = status;
-	this.remaining = MAX_REMAINING;
+	this.remaining = MAX;
 }
 
 
-public ExecTask(int type, int status, Function<String, Integer> matcher) {
+public ExecTask(int type, int status, Function<String, Integer> matcher, Predicate<String> problemMatcher) {
 
 	this(type, status);
 	
 	this.matcher = matcher;
+	this.problemMatcher = problemMatcher;
 
+}
+
+
+@Override
+public int matchesOutput(String line) {
+	return matcher.apply(line);
+}
+
+
+@Override
+public boolean matchesProblem(String line) {
+	return problemMatcher.test(line);
 }
 
 
@@ -58,32 +71,20 @@ public String show() {
 
 
 @Override
-public int status() {
+public int getStatus() {
 	return status;
 }
 
 
 @Override
-public int type() {
+public int getType() {
 	return type;
 }
 
 
 @Override
 public void setRemaining(int percent) {
-
-	if (percent>MAX_REMAINING) {
-		throw new IndexOutOfBoundsException("");
-	}
-	
-	
-	
-}
-
-
-@Override
-public Function<String, Integer> outputMatcher() {
-	return matcher;
+	remaining = Math.min(MAX, percent);
 }
 
 
@@ -95,7 +96,7 @@ public int getRemaining() {
 
 @Override
 public boolean isDone() {
-	return remaining<=0;
+	return remaining<=Task.NEXT;
 }
 
 

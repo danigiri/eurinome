@@ -25,8 +25,8 @@ import cat.calidos.eurinome.runtime.api.StoppingTask;
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class ExecRunningTask extends ExecTask implements RunningTask {
 
-public ExecRunningTask(int type, int status) {
-	super(type, status);
+public ExecRunningTask(int type) {
+	super(type, RUNNING);
 }
 
 @Override

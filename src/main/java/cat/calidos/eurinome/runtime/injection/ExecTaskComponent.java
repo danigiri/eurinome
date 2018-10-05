@@ -22,6 +22,7 @@ import dagger.producers.ProductionComponent;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import javax.inject.Named;
 
@@ -43,9 +44,11 @@ ReadyTask readyTask();
 @Component.Builder
 interface Builder {
 
-	@BindsInstance Builder path(@Named("Path") String path);
+	@BindsInstance Builder type(@Named("Type") int type);
+	@BindsInstance Builder exec(@Named("Path") String... command);
 	@BindsInstance Builder startedMatcher(@Named("StartedMatcher") Function<String, Integer> matcher);
-	@BindsInstance Builder startedCallback(@Named("StartedMatcher") BiConsumer<ExecRunningTask, String> callback);
+	@BindsInstance Builder startedCallback(@Named("Started") BiConsumer<ExecRunningTask, String> callback);
+	@BindsInstance Builder problemMatcher(@Named("ProblemMatcher") Predicate<String> problemMatcher);
 
 	ExecTaskComponent build();
 

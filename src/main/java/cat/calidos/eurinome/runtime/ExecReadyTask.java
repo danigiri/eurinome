@@ -49,7 +49,7 @@ public ExecReadyTask(int type,
 						ExecRunningTask runningTask
 						) {
 
-		super(type, IDLE);
+		super(type, READY);
 
 		this.executor = executor;
 		this.startingTask = startingTask;
@@ -68,12 +68,15 @@ public StartingTask start() {
 				@Override
 				protected void processLine(String line) {
 					System.out.println(line);
+					System.out.println("status="+status);
 					
 					switch(status) {
 						case STARTING:
-							int percent = startingTask.outputMatcher().apply(line);
+							int percent = startingTask.matchesOutput(line);
 							startingTask.setRemaining(percent);
 							if (startingTask.isDone()) {
+								System.out.println("Task is started, running callback");
+								
 								startedCallback.accept(runningTask, line); //TODO: accumulate all strings so far
 							}
 							break;

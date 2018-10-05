@@ -17,38 +17,40 @@
 package cat.calidos.eurinome.runtime.api;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public interface Task extends Showable {
 
-public static int IDLE = 1001;
+public static int READY = 1001;
 public static int STARTING = 1002;
 public static int RUNNING = 1003;
 public static int STOPPING = 1004;
 public static int FINISHED = 1005;
 
-public static int COMPLETED = 0;
-public static int MAX_REMAINING = 100;
+public static int NEXT = 0;
+public static int MAX = 100;
 
 public static int ONE_TIME = 1000;
 public static int LONG_RUNNING = 1100;
 
 
-/**	@return the current output matching function, given a log line, it returns how much is remaining in the current state,
+/**	@return given a log line, it returns how much is remaining in the current state,
 * 	or negative if there is an error or some kind of problem. The remaining time is undefined for long running tasks.
 * 	Values are from 100 to 1 for percentage, 0 for stage completed and negative for errors
 */
-public Function<String, Integer> outputMatcher();
+public int matchesOutput(String line);
+
+public boolean matchesProblem(String line);
+
+/**	@return */
+public int getStatus();
 
 
 /**	@return */
-public int status();
-
-
-/**	@return */
-public int type();
+public int getType();
 
 
 public void setRemaining(int percent);
@@ -58,6 +60,14 @@ public int getRemaining();
 
 
 public boolean isDone();
+
+
+/** Used in testing, block until status is reached */
+default void blockUntil(int status) {
+	while (getStatus()!=status) {
+		Thread.onSpinWait();
+	}
+}
 
 
 }
