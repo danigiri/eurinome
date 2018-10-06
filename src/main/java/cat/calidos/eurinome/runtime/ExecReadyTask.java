@@ -40,7 +40,6 @@ public class ExecReadyTask extends ExecTask implements ReadyTask {
 private ProcessExecutor executor;
 protected ExecStartingTask startingTask;
 private ExecRunningTask runningTask;
-private Process process;
 
 
 public ExecReadyTask(int type, ProcessExecutor executor, ExecStartingTask startingTask, ExecRunningTask runningTask) {
@@ -84,7 +83,7 @@ public StartingTask start() {
 						if (isOneTime() && runningTask.isDone()) {
 							percent = runningTask.matchesOutput(line);
 							runningTask.setRemaining(percent);
-							//TODO: decide what to do if the actual process is not done yet
+							// we do not take action as we expect the process to finish
 						} else {
 							
 						}
@@ -94,9 +93,11 @@ public StartingTask start() {
 			}
 		});
 
-		process = preparedExecutor.start().getProcess();
-		process.onExit().thenAccept(a -> runningTask.markAsFinished());
+		process = preparedExecutor.start();
 		startingTask.setProcess(process);
+		runningTask.setProcess(process);
+		process.getProcess().onExit().thenAccept(a -> runningTask.markAsFinished());
+		System.out.println("Setting process="+process);
 		
 		return startingTask;
 

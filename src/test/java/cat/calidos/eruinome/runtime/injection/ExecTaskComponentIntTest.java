@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import cat.calidos.eurinome.runtime.api.FinishedTask;
 import cat.calidos.eurinome.runtime.api.ReadyTask;
 import cat.calidos.eurinome.runtime.api.RunningTask;
 import cat.calidos.eurinome.runtime.api.StartingTask;
@@ -42,6 +43,7 @@ public void testOneTimeExecTask() {
 												.startedMatcher(s -> s.equals("hello world")? Task.NEXT : Task.MAX)
 												.startedCallback((s, r) -> {})
 												.runningMatcher(s -> Task.MAX)	// we wait for the process to finish
+												.finishedCallback((r, f) -> {})
 												.problemMatcher(s -> false)
 												.build()
 												.readyTask();
@@ -55,7 +57,9 @@ public void testOneTimeExecTask() {
 	RunningTask runningTask = start.runningTask();
 	runningTask.blockUntil(Task.FINISHED);
 	
-	
+	FinishedTask finishedTask = runningTask.finishedTask();
+	assertTrue(finishedTask.wasOk());
+	assertEquals(0, finishedTask.result());
 }
 
 }

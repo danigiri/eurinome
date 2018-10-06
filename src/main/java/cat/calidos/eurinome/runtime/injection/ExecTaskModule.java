@@ -25,6 +25,7 @@ import javax.inject.Singleton;
 
 import org.zeroturnaround.exec.ProcessExecutor;
 
+import cat.calidos.eurinome.runtime.ExecFinishedTask;
 import cat.calidos.eurinome.runtime.ExecReadyTask;
 import cat.calidos.eurinome.runtime.ExecRunningTask;
 import cat.calidos.eurinome.runtime.ExecStartingTask;
@@ -45,7 +46,7 @@ public class ExecTaskModule {
 ReadyTask readyTask(@Named("Type") int type,
 					ProcessExecutor executor,
 					ExecStartingTask startingTask,
-					@Named("RunningTask") ExecRunningTask runningTask) {
+					ExecRunningTask runningTask) {
 	return new ExecReadyTask(type, executor, startingTask, runningTask);
 }
 
@@ -60,21 +61,29 @@ ProcessExecutor executor(@Named("Path") String... command) {
 ExecStartingTask startingTask(@Named("Type") int type, 
 								@Named("StartedMatcher") Function<String, Integer> matcher,
 								@Named("ProblemMatcher") Predicate<String> problemMatcher,
-								@Named("Started") BiConsumer<ExecStartingTask, ExecRunningTask> startedCallback,
-								@Named("RunningTask") ExecRunningTask runningTask) {
+								BiConsumer<ExecStartingTask, ExecRunningTask> startedCallback,
+								ExecRunningTask runningTask) {
 	return new ExecStartingTask(type, matcher, problemMatcher, startedCallback, runningTask);
 }
 
 
 //TODO: this should be a singleton as new instances are being created
-@Provides @Named("RunningTask")
+@Provides
 ExecRunningTask runningTask(@Named("Type") int type,
 							@Named("RunningMatcher") Function<String, Integer> matcher,
-							@Named("ProblemMatcher") Predicate<String> problemMatcher) {
+							@Named("ProblemMatcher") Predicate<String> problemMatcher,
+							ExecFinishedTask finishedTask,
+							BiConsumer<ExecRunningTask, ExecFinishedTask> callback) {
 	
-	final  ExecRunningTask runningTask = new ExecRunningTask(type, matcher, problemMatcher);
+	final  ExecRunningTask runningTask = new ExecRunningTask(type, matcher, problemMatcher, finishedTask, callback);
 	
 	return runningTask;
+}
+
+
+@Provides 
+ExecFinishedTask finishedTask(@Named("Type") int type, @Named("ProblemMatcher") Predicate<String> problemMatcher) {
+	return new ExecFinishedTask(type, problemMatcher);
 }
 
 }

@@ -33,7 +33,7 @@ protected int status;
 private Function<String, Integer> matcher;
 private int remaining;
 private Predicate<String> problemMatcher;
-protected Process process;
+protected StartedProcess process;
 protected StringBuilder output;
 
 public ExecTask(int type, int status) {
@@ -56,7 +56,7 @@ public ExecTask(int type, int status, Function<String, Integer> matcher, Predica
 }
 
 
-public void setProcess(Process process) {
+public void setProcess(StartedProcess process) {
 	this.process = process;
 }
 

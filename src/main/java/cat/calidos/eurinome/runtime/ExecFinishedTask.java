@@ -14,20 +14,36 @@
  *   limitations under the License.
  */
 
-package cat.calidos.eurinome.runtime.api;
+package cat.calidos.eurinome.runtime;
+
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+import cat.calidos.eurinome.runtime.api.FinishedTask;
 
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public interface RunningTask extends Task {
+public class ExecFinishedTask extends ExecTask implements FinishedTask {
 
 
-public StoppingTask stop();
+public ExecFinishedTask(int type, 
+						Predicate<String> problemMatcher) {
+	super(type, FINISHED, (s) -> NEXT, problemMatcher);
+}
 
-public FinishedTask finishedTask();
 
-public FinishedTask markAsFinished();
+@Override
+public boolean wasOk() {
+	return result()==0;
+}
 
+
+@Override
+public int result() {
+	return process.getProcess().exitValue();
+}
 
 }

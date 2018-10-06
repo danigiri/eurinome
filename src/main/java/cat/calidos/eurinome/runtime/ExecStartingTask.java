@@ -73,6 +73,7 @@ public StoppingTask cancel() {
 @Override
 public RunningTask markAsStarted() {
 	
+	System.out.println("Mark as started process="+process);
 	status = STARTED;
 	setRemaining(NEXT);
 	runningTask.setProcess(process);

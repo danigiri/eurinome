@@ -16,6 +16,7 @@
 
 package cat.calidos.eurinome.runtime;
 
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -29,8 +30,20 @@ import cat.calidos.eurinome.runtime.api.StoppingTask;
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class ExecRunningTask extends ExecTask implements RunningTask {
 
-public ExecRunningTask(int type, Function<String, Integer> matcher, Predicate<String> problemMatcher) {
+private ExecFinishedTask finishedTask;
+private BiConsumer<ExecRunningTask, ExecFinishedTask> finishedCallBack;
+
+public ExecRunningTask(int type, 
+						Function<String, Integer> matcher, 
+						Predicate<String> problemMatcher, 
+						ExecFinishedTask finishedTask,
+						BiConsumer<ExecRunningTask, ExecFinishedTask> finishedCallBack) {
+	
 	super(type, RUNNING, matcher, problemMatcher);
+	
+	this.finishedTask = finishedTask;
+	this.finishedCallBack = finishedCallBack;
+	
 }
 
 
@@ -43,12 +56,24 @@ public StoppingTask stop() {
 
 
 @Override
+public FinishedTask finishedTask() {
+	return finishedTask;
+}
+
+
+@Override
 public FinishedTask markAsFinished() {
 
+	System.out.println("Mark as finished process="+process);
 	status = FINISHED;
 	setRemaining(NEXT);
+	finishedTask.setProcess(process);
+	
+	finishedCallBack.accept(this, finishedTask);
 	
 	return null;
 }
+
+
 
 }
