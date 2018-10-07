@@ -34,16 +34,13 @@ import cat.calidos.eurinome.runtime.injection.DaggerExecTaskComponent;
 public class ExecTaskComponentIntTest {
 
 
-@Test @DisplayName("Exec one time task (IntTest)")
-public void testOneTimeExecTask() {
+@Test @DisplayName("Execute a simple onetime task (IntTest)")
+public void testOneTimeExecSimpleTask() {
 
 	ReadyTask task = DaggerExecTaskComponent.builder()
 												.exec( "/bin/bash", "-c", "echo 'hello world'")
 												.type(Task.ONE_TIME)
-												.startedMatcher(s -> s.equals("hello world")? Task.NEXT : Task.MAX)
-												.startedCallback((s, r) -> {})
-												.runningMatcher(s -> Task.MAX)	// we wait for the process to finish
-												.finishedCallback((r, f) -> {})
+												.startedMatcher(s -> s.equals("hello world") ? Task.NEXT : Task.MAX)
 												.problemMatcher(s -> false)
 												.build()
 												.readyTask();
@@ -60,6 +57,24 @@ public void testOneTimeExecTask() {
 	FinishedTask finishedTask = runningTask.finishedTask();
 	assertTrue(finishedTask.wasOk());
 	assertEquals(0, finishedTask.result());
+
 }
+
+@Test @DisplayName("Execute a complex onetime task (IntTest)")
+public void testOneTimeExecComplexTask() {
+	
+	ReadyTask task = DaggerExecTaskComponent.builder()
+			.exec( "/bin/bash", "-c", "echo 'hello world'")
+			.type(Task.ONE_TIME)
+			.startedMatcher(s -> s.equals("hello world")? Task.NEXT : Task.MAX)
+			.startedCallback((s, r) -> {})
+			.runningMatcher(s -> Task.MAX)	// we wait for the process to finish
+			.finishedCallback((r, f) -> {})
+			.problemMatcher(s -> false)
+			.build()
+			.readyTask();
+	
+}
+
 
 }

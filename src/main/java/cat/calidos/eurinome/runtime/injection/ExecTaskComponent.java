@@ -24,6 +24,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
 import javax.inject.Named;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -48,9 +49,9 @@ interface Builder {
 	@BindsInstance Builder type(@Named("Type") int type);
 	@BindsInstance Builder exec(@Named("Path") String... command);
 	@BindsInstance Builder startedMatcher(@Named("StartedMatcher") Function<String, Integer> matcher);
-	@BindsInstance Builder startedCallback(BiConsumer<ExecStartingTask, ExecRunningTask> callback);
-	@BindsInstance Builder runningMatcher(@Named("RunningMatcher") Function<String, Integer> matcher);
-	@BindsInstance Builder finishedCallback(BiConsumer<ExecRunningTask, ExecFinishedTask> callback);
+	@BindsInstance Builder startedCallback(@Nullable BiConsumer<ExecStartingTask, ExecRunningTask> callback);
+	@BindsInstance Builder runningMatcher(@Nullable @Named("RunningMatcher") Function<String, Integer> matcher);
+	@BindsInstance Builder finishedCallback(@Nullable BiConsumer<ExecRunningTask, ExecFinishedTask> callback);
 	@BindsInstance Builder problemMatcher(@Named("ProblemMatcher") Predicate<String> problemMatcher);
 
 	ExecTaskComponent build();

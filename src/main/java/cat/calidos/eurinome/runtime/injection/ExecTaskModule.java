@@ -20,6 +20,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -61,7 +62,7 @@ ProcessExecutor executor(@Named("Path") String... command) {
 ExecStartingTask startingTask(@Named("Type") int type, 
 								@Named("StartedMatcher") Function<String, Integer> matcher,
 								@Named("ProblemMatcher") Predicate<String> problemMatcher,
-								BiConsumer<ExecStartingTask, ExecRunningTask> startedCallback,
+								@Named("StartedCallback") BiConsumer<ExecStartingTask, ExecRunningTask> startedCallback,
 								ExecRunningTask runningTask) {
 	return new ExecStartingTask(type, matcher, problemMatcher, startedCallback, runningTask);
 }
@@ -70,10 +71,10 @@ ExecStartingTask startingTask(@Named("Type") int type,
 //TODO: this should be a singleton as new instances are being created
 @Provides
 ExecRunningTask runningTask(@Named("Type") int type,
-							@Named("RunningMatcher") Function<String, Integer> matcher,
+							@Named("EffectiveRunningMatcher") Function<String, Integer> matcher,
 							@Named("ProblemMatcher") Predicate<String> problemMatcher,
 							ExecFinishedTask finishedTask,
-							BiConsumer<ExecRunningTask, ExecFinishedTask> callback) {
+							@Named("FinishedCallback") BiConsumer<ExecRunningTask, ExecFinishedTask> callback) {
 	
 	final  ExecRunningTask runningTask = new ExecRunningTask(type, matcher, problemMatcher, finishedTask, callback);
 	
@@ -84,6 +85,26 @@ ExecRunningTask runningTask(@Named("Type") int type,
 @Provides 
 ExecFinishedTask finishedTask(@Named("Type") int type, @Named("ProblemMatcher") Predicate<String> problemMatcher) {
 	return new ExecFinishedTask(type, problemMatcher);
+}
+
+
+@Provides @Named("StartedCallback") 
+BiConsumer<ExecStartingTask, ExecRunningTask> startedCallback(
+												@Nullable BiConsumer<ExecStartingTask, ExecRunningTask> callback) {
+	return (callback==null)? (s, r) -> {} : callback;
+}
+
+
+@Provides @Named("EffectiveRunningMatcher") 
+Function<String, Integer> matcher(@Nullable @Named("RunningMatcher") Function<String, Integer> matcher) {
+	return (matcher==null)? s -> Task.MAX : matcher;	// default matcher is progress is always 100%, wait for process
+}
+
+
+@Provides @Named("FinishedCallback") 
+BiConsumer<ExecRunningTask, ExecFinishedTask> finishedCallback(
+												@Nullable BiConsumer<ExecRunningTask, ExecFinishedTask> callback) {
+	return (callback==null)? (s, r) -> {} : callback;
 }
 
 }
