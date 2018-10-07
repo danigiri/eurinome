@@ -46,19 +46,20 @@ public class ExecTaskModule {
 @Provides
 ReadyTask readyTask(@Named("Type") int type,
 					ProcessExecutor executor,
+					@Named("ProblemMatcher") Predicate<String> problemMatcher,
 					ExecStartingTask startingTask,
 					ExecRunningTask runningTask) {
-	return new ExecReadyTask(type, executor, startingTask, runningTask);
+	return new ExecReadyTask(type, executor, problemMatcher, startingTask, runningTask);
 }
 
 
-@Provides
+@Provides @Singleton
 ProcessExecutor executor(@Named("Path") String... command) {
 	return new ProcessExecutor().command(command);
 }
 
 
-@Provides
+@Provides @Singleton
 ExecStartingTask startingTask(@Named("Type") int type, 
 								@Named("StartedMatcher") Function<String, Integer> matcher,
 								@Named("ProblemMatcher") Predicate<String> problemMatcher,
@@ -69,7 +70,7 @@ ExecStartingTask startingTask(@Named("Type") int type,
 
 
 //TODO: this should be a singleton as new instances are being created
-@Provides
+@Provides @Singleton
 ExecRunningTask runningTask(@Named("Type") int type,
 							@Named("EffectiveRunningMatcher") Function<String, Integer> matcher,
 							@Named("ProblemMatcher") Predicate<String> problemMatcher,
@@ -82,7 +83,7 @@ ExecRunningTask runningTask(@Named("Type") int type,
 }
 
 
-@Provides 
+@Provides @Singleton
 ExecFinishedTask finishedTask(@Named("Type") int type, @Named("ProblemMatcher") Predicate<String> problemMatcher) {
 	return new ExecFinishedTask(type, problemMatcher);
 }

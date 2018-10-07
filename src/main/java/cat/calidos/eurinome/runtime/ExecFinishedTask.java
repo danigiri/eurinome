@@ -16,8 +16,6 @@
 
 package cat.calidos.eurinome.runtime;
 
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import cat.calidos.eurinome.runtime.api.FinishedTask;
@@ -31,12 +29,16 @@ public class ExecFinishedTask extends ExecTask implements FinishedTask {
 
 public ExecFinishedTask(int type, 
 						Predicate<String> problemMatcher) {
+	
 	super(type, FINISHED, (s) -> NEXT, problemMatcher);
+
+	this.setRemaining(NEXT);	// by definition we are done
+
 }
 
 
 @Override
-public boolean wasOk() {
+public boolean isOK() {
 	return result()==0;
 }
 

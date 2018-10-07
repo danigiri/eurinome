@@ -26,6 +26,7 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -37,7 +38,7 @@ import cat.calidos.eurinome.runtime.api.ReadyTask;
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-@Component(modules={ExecTaskModule.class})
+@Component(modules={ExecTaskModule.class}) @Singleton
 public interface ExecTaskComponent {
 
 ReadyTask readyTask();

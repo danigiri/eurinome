@@ -42,9 +42,9 @@ protected ExecStartingTask startingTask;
 private ExecRunningTask runningTask;
 
 
-public ExecReadyTask(int type, ProcessExecutor executor, ExecStartingTask startingTask, ExecRunningTask runningTask) {
+public ExecReadyTask(int type, ProcessExecutor executor, Predicate<String> problemMatcher, ExecStartingTask startingTask, ExecRunningTask runningTask) {
 
-		super(type, READY);
+		super(type, READY, null, problemMatcher);	// no matcher for ready tasks (hence the null)
 
 		this.executor = executor;
 		this.startingTask = startingTask;
@@ -63,6 +63,7 @@ public StartingTask start() {
 
 		status = STARTING;
 		ProcessExecutor preparedExecutor = executor.redirectOutput(new LogOutputStream() {
+			
 			@Override
 			protected void processLine(String line) {
 				System.out.println(line);
@@ -80,7 +81,7 @@ public StartingTask start() {
 						break;
 					case RUNNING:
 						runningTask.output.append(line);
-						if (isOneTime() && runningTask.isDone()) {
+						if (isOneTime() && !runningTask.isDone()) {
 							percent = runningTask.matchesOutput(line);
 							runningTask.setRemaining(percent);
 							// we do not take action as we expect the process to finish
@@ -90,6 +91,27 @@ public StartingTask start() {
 						break;
 				}
 
+			}
+			
+		});
+
+		preparedExecutor.redirectError(new LogOutputStream() {
+
+			@Override
+			protected void processLine(String line) {
+				System.err.println(line);
+				ExecTask currentTask = null;
+				switch(status) {
+				case STARTING:
+					currentTask = startingTask;
+					break;
+				case RUNNING:
+					currentTask = runningTask;
+					break;
+				}
+				if (currentTask.matchesProblem(line)) {
+					currentTask.isOK = false;
+				}
 			}
 		});
 

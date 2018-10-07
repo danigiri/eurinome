@@ -35,6 +35,7 @@ private int remaining;
 private Predicate<String> problemMatcher;
 protected StartedProcess process;
 protected StringBuilder output;
+protected boolean isOK;
 
 public ExecTask(int type, int status) {
 	
@@ -42,7 +43,7 @@ public ExecTask(int type, int status) {
 	this.status = status;
 	this.remaining = MAX;
 	this.output = new StringBuilder();
-	
+	this.isOK = true;
 }
 
 
@@ -100,6 +101,12 @@ public void setRemaining(int percent) {
 @Override
 public int getRemaining() {
 	return remaining;
+}
+
+
+@Override
+public boolean isOK() {
+	return isOK;
 }
 
 

@@ -68,16 +68,22 @@ public void setRemaining(int percent);
 public int getRemaining();
 
 
+public boolean isOK();
+
+
 default public boolean isDone() {
 	return getRemaining()==Task.NEXT;
 }
 
 
-/** Used in testing, block until status is reached */
-default void blockUntil(int status) {
+/** Used in testing, block until status is reached  @throws InterruptedException */
+default void spinUntil(int status) throws InterruptedException {
 	
-	while (getStatus()!=status) {
+	while (getStatus()!=status && isOK()) {
 		Thread.onSpinWait();
+	}
+	if (!isOK()) {
+		throw new InterruptedException("While waiting, the task failed");
 	}
 
 }

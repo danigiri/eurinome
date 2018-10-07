@@ -71,7 +71,7 @@ public FinishedTask markAsFinished() {
 	
 	finishedCallBack.accept(this, finishedTask);
 	
-	return null;
+	return finishedTask;
 }
 
 
