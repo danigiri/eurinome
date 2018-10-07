@@ -64,8 +64,9 @@ ExecStartingTask startingTask(@Named("Type") int type,
 								@Named("StartedMatcher") Function<String, Integer> matcher,
 								@Named("ProblemMatcher") Predicate<String> problemMatcher,
 								@Named("StartedCallback") BiConsumer<ExecStartingTask, ExecRunningTask> startedCallback,
-								ExecRunningTask runningTask) {
-	return new ExecStartingTask(type, matcher, problemMatcher, startedCallback, runningTask);
+								ExecRunningTask runningTask,
+								ExecFinishedTask finishedTask) {
+	return new ExecStartingTask(type, matcher, problemMatcher, startedCallback, runningTask, finishedTask);
 }
 
 

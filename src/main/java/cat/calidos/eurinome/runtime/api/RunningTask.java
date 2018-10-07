@@ -22,12 +22,12 @@ package cat.calidos.eurinome.runtime.api;
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public interface RunningTask extends Task {
 
+public FinishedTask markAsFinished();
 
-public StoppingTask stop();
+public FinishedTask markAsFailed();
 
 public FinishedTask finishedTask();
 
-public FinishedTask markAsFinished();
-
+public StoppingTask stop();
 
 }

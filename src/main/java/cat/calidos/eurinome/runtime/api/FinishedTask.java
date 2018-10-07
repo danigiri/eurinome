@@ -8,6 +8,7 @@ default public boolean failed() {
 	return !isOK(); 
 }
 
+public void waitFor() throws InterruptedException;
 
 public int result();
 

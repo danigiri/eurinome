@@ -16,6 +16,7 @@
 
 package cat.calidos.eurinome.runtime;
 
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 import cat.calidos.eurinome.runtime.api.FinishedTask;
@@ -44,8 +45,15 @@ public boolean isOK() {
 
 
 @Override
+public void waitFor() throws InterruptedException {
+	startedProcess.getProcess().waitFor();
+	
+}
+
+
+@Override
 public int result() {
-	return process.getProcess().exitValue();
+	return startedProcess.getProcess().exitValue();
 }
 
 }

@@ -33,9 +33,9 @@ protected int status;
 private Function<String, Integer> matcher;
 private int remaining;
 private Predicate<String> problemMatcher;
-protected StartedProcess process;
+protected StartedProcess startedProcess;
 protected StringBuilder output;
-protected boolean isOK;
+private boolean isOK = true;
 
 public ExecTask(int type, int status) {
 	
@@ -43,7 +43,7 @@ public ExecTask(int type, int status) {
 	this.status = status;
 	this.remaining = MAX;
 	this.output = new StringBuilder();
-	this.isOK = true;
+
 }
 
 
@@ -58,7 +58,7 @@ public ExecTask(int type, int status, Function<String, Integer> matcher, Predica
 
 
 public void setProcess(StartedProcess process) {
-	this.process = process;
+	this.startedProcess = process;
 }
 
 
@@ -93,8 +93,8 @@ public int getType() {
 
 
 @Override
-public void setRemaining(int percent) {
-	remaining = Math.min(MAX, percent);
+public synchronized void setRemaining(int percent) {	// we have the STDOUT logger and STDEER logger changing this
+	remaining = Math.min(Math.min(MAX, percent), remaining); // we never go up
 }
 
 
@@ -103,6 +103,9 @@ public int getRemaining() {
 	return remaining;
 }
 
+public void setKO() {
+	isOK = false;
+}
 
 @Override
 public boolean isOK() {

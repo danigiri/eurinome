@@ -56,24 +56,34 @@ public StoppingTask stop() {
 
 
 @Override
-public FinishedTask finishedTask() {
-	return finishedTask;
-}
-
-
-@Override
 public FinishedTask markAsFinished() {
 
-	System.out.println("Mark as finished process="+process);
+	System.out.println("Mark as finished process="+startedProcess);
+	finishedTask.setProcess(startedProcess);
 	status = FINISHED;
 	setRemaining(NEXT);
-	finishedTask.setProcess(process);
 	
 	finishedCallBack.accept(this, finishedTask);
 	
 	return finishedTask;
 }
 
+@Override
+public FinishedTask markAsFailed() {
+
+	finishedTask.setProcess(startedProcess);
+	setKO();
+	setRemaining(NEXT);
+	
+	return finishedTask();
+
+}
+
+
+@Override
+public FinishedTask finishedTask() {
+	return finishedTask;
+}
 
 
 }

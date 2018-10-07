@@ -22,6 +22,7 @@ import java.util.function.Predicate;
 
 import org.zeroturnaround.exec.StartedProcess;
 
+import cat.calidos.eurinome.runtime.api.FinishedTask;
 import cat.calidos.eurinome.runtime.api.RunningTask;
 import cat.calidos.eurinome.runtime.api.StartingTask;
 import cat.calidos.eurinome.runtime.api.StoppingTask;
@@ -34,19 +35,22 @@ public class ExecStartingTask extends ExecTask implements StartingTask {
 
 private BiConsumer<ExecStartingTask, ExecRunningTask> startedCallback;
 private ExecRunningTask runningTask;
+private ExecFinishedTask finishedTask;
 
 
 public ExecStartingTask(int type, 
 						Function<String, Integer> matcher, 
 						Predicate<String> problemMatcher,
 						BiConsumer<ExecStartingTask, ExecRunningTask> startedCallback,
-						ExecRunningTask runningTask
+						ExecRunningTask runningTask,
+						ExecFinishedTask finishedTask
 						) {
 
 	super(type, STARTING, matcher, problemMatcher);
 	
 	this.startedCallback = startedCallback;
 	this.runningTask = runningTask;
+	this.finishedTask = finishedTask;
 	System.out.println("Starting, running="+runningTask);
 
 
@@ -62,8 +66,7 @@ public RunningTask runningTask() throws IllegalStateException {
 }
 
 
-@Override
-public StoppingTask cancel() {
+public StoppingTask stop() {
 
 	// TODO Auto-generated method stub
 	return null;
@@ -73,15 +76,33 @@ public StoppingTask cancel() {
 @Override
 public RunningTask markAsStarted() {
 	
-	System.out.println("Mark as started process="+process);
+	System.out.println("Mark as started process="+startedProcess);
+	runningTask.setProcess(startedProcess);
 	status = STARTED;
 	setRemaining(NEXT);
-	runningTask.setProcess(process);
 	
 	startedCallback.accept(this, runningTask);
 
 	return runningTask;
 
+}
+
+
+@Override
+public FinishedTask markAsFailed() {
+	
+	finishedTask.setProcess(startedProcess);
+	setKO();
+	setRemaining(NEXT);
+
+	return finishedTask();
+
+}
+
+
+@Override
+public FinishedTask finishedTask() {
+	return finishedTask;
 }
 
 }

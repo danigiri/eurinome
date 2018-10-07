@@ -17,13 +17,9 @@
 package cat.calidos.eurinome.runtime;
 
 import java.io.IOException;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.zeroturnaround.exec.ProcessExecutor;
-import org.zeroturnaround.exec.StartedProcess;
 import org.zeroturnaround.exec.stream.LogOutputStream;
 
 import cat.calidos.eurinome.problems.EurinomeRuntimeException;
@@ -61,8 +57,57 @@ public StartingTask start() {
 
 	try {
 
+		// race condition here, stdout and stderr are to all intents and purposes being examined simultaneously, this
+		// means that in the case of an error, we can have the following cases:
+		// a)
+		// starting:
+		// STDIN (match)
+		// STDERR (match)
+		// markasFinished(starting)
+		// markAsFailed(starting)
+		// b)
+		// starting:
+		// STDIN (match)
+		// markasFinished(starting)
+		// running:
+		// STDERR (match)
+		// markAsFailed(running)
+		// c)
+		// starting:
+		// STDERR (match)
+		// STDIN (match)
+		// markasFinished(starting)
+		// running:
+		// markAsFailed(running)
+		// and a few other cases...
+		// GUARD 1:
+		// Therefore, if we fail in the started state we mark started as failed, but if we fail in running, we mark both
+		// Also, we synchronize the setRemaning method, plus it cannot go up on value, so we ensure that we always set
+		// startedTask to NEXT eventually. (Either the problem sets it to NEXT or it's marked complete and therefore
+		// NEXT as well).
+		// GUARD 2:
+		// Moreover, status is untouched/undefined when erroring, so if we have:
+		// a)
+		// status=STARTED
+		// isOK=FALSE
+		// b)
+		// isOK=false
+		// (status is not changed and therefore undefined)
+		// c)
+		// isOK=FALSE
+		// status=STARTED
+		// we still maintain the invariant.
+		// GUARD 3:
+		// only setKO implemented, isOK is private, so isOK is never set to true, we cannot override with OK
+		// GUARD 4:
+		// TODO: FIXME: isOK() checks previous tasks so if any is not OK, we're not OK, as the most conservative
+		//
+		// In summary: 	a) remaining is sync and always goes down, cannot be overriden and go up
+		//				b) ok variable cannot be set to true, cannot be overriden and go true
+		//				c) if any of the tasks fails, we are marked as failed
+
 		status = STARTING;
-		ProcessExecutor preparedExecutor = executor.redirectOutput(new LogOutputStream() {
+		executor.redirectOutput(new LogOutputStream() {
 			
 			@Override
 			protected void processLine(String line) {
@@ -95,31 +140,35 @@ public StartingTask start() {
 			
 		});
 
-		preparedExecutor.redirectError(new LogOutputStream() {
+		ProcessExecutor preparedExecutor = executor.redirectError(new LogOutputStream() {
 
 			@Override
 			protected void processLine(String line) {
 				System.err.println(line);
-				ExecTask currentTask = null;
+				boolean problem = false;
 				switch(status) {
-				case STARTING:
-					currentTask = startingTask;
-					break;
-				case RUNNING:
-					currentTask = runningTask;
-					break;
+					case STARTING:
+						if (startingTask.matchesProblem(line)) {
+							startingTask.markAsFailed();
+							problem = true;
+						}
+						break;
+					case RUNNING:
+						if (runningTask.matchesProblem(line)) {
+							runningTask.markAsFailed();		// start is marked as failed as STDOUT logger could still
+							problem = true;					// be running, so that's in undefined state
+						}
+						break;
 				}
-				if (currentTask.matchesProblem(line)) {
-					currentTask.isOK = false;
-				}
+				// TODO: wait for process to exit
 			}
 		});
 
-		process = preparedExecutor.start();
-		startingTask.setProcess(process);
-		runningTask.setProcess(process);
-		process.getProcess().onExit().thenAccept(a -> runningTask.markAsFinished());
-		System.out.println("Setting process="+process);
+		startedProcess = preparedExecutor.start();
+		startingTask.setProcess(startedProcess);
+		runningTask.setProcess(startedProcess);
+		startedProcess.getProcess().onExit().thenAccept(a -> runningTask.markAsFinished());
+		System.out.println("Setting process="+startedProcess);
 		
 		return startingTask;
 

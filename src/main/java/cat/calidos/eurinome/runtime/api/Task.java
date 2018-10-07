@@ -80,7 +80,7 @@ default public boolean isDone() {
 default void spinUntil(int status) throws InterruptedException {
 	
 	while (getStatus()!=status && isOK()) {
-		Thread.onSpinWait();
+		Thread.sleep(20);	// this seems more effective than spinwait
 	}
 	if (!isOK()) {
 		throw new InterruptedException("While waiting, the task failed");

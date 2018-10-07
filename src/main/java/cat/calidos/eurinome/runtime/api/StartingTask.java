@@ -26,7 +26,10 @@ public RunningTask runningTask() throws IllegalStateException;
 
 public RunningTask markAsStarted();
 
-public StoppingTask cancel();
+public FinishedTask markAsFailed();
 
+public FinishedTask finishedTask();
+
+public StoppingTask stop();
 
 }

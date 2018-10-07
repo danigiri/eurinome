@@ -19,8 +19,8 @@ package cat.calidos.eruinome.runtime.injection;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
-import org.opentest4j.MultipleFailuresError;
 
 import cat.calidos.eurinome.runtime.api.FinishedTask;
 import cat.calidos.eurinome.runtime.api.ReadyTask;
@@ -39,7 +39,7 @@ private boolean startedCallbackCalled = false;
 private boolean finishedCallbackCalled = false;
 
 
-@Test @DisplayName("Execute a simple onetime task (IntTest)")
+@Test @DisplayName("Simple onetime task (IntTest)")
 public void testOneTimeExecSimpleTask() throws Exception {
 
 	ReadyTask task = DaggerExecTaskComponent.builder()
@@ -49,9 +49,9 @@ public void testOneTimeExecSimpleTask() throws Exception {
 												.problemMatcher(s -> true)	// if anything shows on STDERR
 												.build()
 												.readyTask();
-	assertAll("task",
-				() -> assertFalse(task.isDone()),
-				() -> assertEquals(Task.READY, task.getStatus())
+	assertAll("simple task",
+				() -> assertFalse(task.isDone(), "Task not started should not be 'done'"),
+				() -> assertEquals(Task.READY, task.getStatus(), "Task not started should be ready")
 	);
 	
 	StartingTask start = task.start();
@@ -62,8 +62,8 @@ public void testOneTimeExecSimpleTask() throws Exception {
 	runningTask.spinUntil(Task.FINISHED);
 	
 	FinishedTask finishedTask = runningTask.finishedTask();
-	assertAll("task",
-				() -> assertTrue(finishedTask.isDone()),
+	assertAll("simple task",
+				() -> assertTrue(finishedTask.isDone(), "Task finished should be 'done'"),
 				() -> assertTrue(finishedTask.isOK()),
 				() -> assertEquals(0, finishedTask.result())
 	);
@@ -71,7 +71,7 @@ public void testOneTimeExecSimpleTask() throws Exception {
 }
 
 
-@Test @DisplayName("Execute a complex onetime task (IntTest)")
+@Test @DisplayName("Complex onetime task (IntTest)")
 public void testOneTimeExecComplexTask() throws Exception {
 	
 	ReadyTask task = DaggerExecTaskComponent.builder()
@@ -85,7 +85,7 @@ public void testOneTimeExecComplexTask() throws Exception {
 			.build()
 			.readyTask();
 	
-	assertAll("task",
+	assertAll("complex task",
 				() -> assertFalse(task.isDone()),
 				() -> assertEquals(Task.READY, task.getStatus())
 	);
@@ -97,13 +97,13 @@ public void testOneTimeExecComplexTask() throws Exception {
 	RunningTask runningTask = start.runningTask();
 	runningTask.spinUntil(Task.FINISHED);
 
-	assertAll("callbacks",
+	assertAll("complex task callbacks",
 			() -> assertTrue(startedCallbackCalled, "Start callback was not called at all"),
 			() -> assertTrue(finishedCallbackCalled, "Finished callback was not called at all")
 	);
 	
 	FinishedTask finishedTask = runningTask.finishedTask();
-	assertAll("task",
+	assertAll("complex task",
 				() -> assertTrue(finishedTask.isOK()),
 				() -> assertEquals(0, finishedTask.result())
 	);
@@ -111,28 +111,44 @@ public void testOneTimeExecComplexTask() throws Exception {
 }
 
 
-@Test @DisplayName("Execute a simple problematic task (IntTest)")
+@Test @DisplayName("Simple problematic task (IntTest)") @RepeatedTest(5)
 public void testOneTimeExecProblematicTask() throws Exception {
 
 	ReadyTask task = DaggerExecTaskComponent.builder()
-												.exec( "/bin/bash", "-c", "echo 'started' && notfound")
+												.exec( "/bin/bash", "-c", "echo 'started' && sleep 1 && notfound")
 												.type(Task.ONE_TIME)
 												.startedMatcher(s -> s.equals("started") ? Task.NEXT : Task.MAX)
 												.problemMatcher(s -> s.contains("command not found"))
 												.build()
 												.readyTask();
-	assertAll("task",
-			() -> assertFalse(task.isDone()),
-			() -> assertEquals(Task.READY, task.getStatus())
+	assertAll("problematic task",
+				() -> assertFalse(task.isDone()),
+				() -> assertEquals(Task.READY, task.getStatus())
 	);
 
 	StartingTask start = task.start();
+	
+	start.spinUntil(Task.STARTED);
+	assertAll("problematic task",	// THIS CAN BE CHECKED ONLY AS WE ARE ORDERING STARTING MESSAGE AND ERROR
+			() -> assertTrue(start.isDone(), "Started task should be completed"),
+			() -> assertTrue(start.isOK(), "Started task should be OK as failure is in the running state")
+			);
+	assertEquals("started", start.show());
+	
+	RunningTask runningTask = start.runningTask();
+	assertThrows(InterruptedException.class, () -> runningTask.spinUntil(Task.FINISHED)); 
+	assertAll("problematic task",
+			() -> assertTrue(runningTask.isDone(), "Running failed task should also be done"),
+			() -> assertFalse(runningTask.isOK(), "Running failed task should not be OK")
+	);
 
-//	FinishedTask finishedTask = runningTask.finishedTask();
-//	assertAll("task",
-//				() -> assertTrue(finishedTask.isOK()),
-//				() -> assertEquals(0, finishedTask.result())
-//	);
+	assertThrows(InterruptedException.class, () -> runningTask.spinUntil(Task.FINISHED));	// failed means throw
+	FinishedTask finishedTask = runningTask.finishedTask();
+	finishedTask.waitFor();
+	assertAll("complex task",
+				() -> assertFalse(finishedTask.isOK(), "finished failed task should not be OK"),
+				() -> assertEquals(127, finishedTask.result(), "result of command not found should be 127")
+	);
 	
 }
 
