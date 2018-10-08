@@ -129,7 +129,7 @@ public void testOneTimeExecProblematicTask() throws Exception {
 	StartingTask start = task.start();
 	
 	start.spinUntil(Task.STARTED);
-	assertAll("problematic task",	// THIS CAN BE CHECKED ONLY AS WE ARE ORDERING STARTING MESSAGE AND ERROR
+	assertAll("problematic task",
 			() -> assertTrue(start.isDone(), "Started task should be completed"),
 			() -> assertTrue(start.isOK(), "Started task should be OK as failure is in the running state")
 			);

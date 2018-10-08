@@ -81,10 +81,8 @@ public StartingTask start() {
 		// markAsFailed(running)
 		// and a few other cases...
 		// GUARD 1:
-		// Therefore, if we fail in the started state we mark started as failed, but if we fail in running, we mark both
-		// Also, we synchronize the setRemaning method, plus it cannot go up on value, so we ensure that we always set
-		// startedTask to NEXT eventually. (Either the problem sets it to NEXT or it's marked complete and therefore
-		// NEXT as well).
+		// We synchronize the setRemaning method, plus it cannot go up on value, so we ensure that we always set
+		// startedTask to NEXT eventually. (Either the problem sets it to NEXT or it's marked complete by runningtask)
 		// GUARD 2:
 		// Moreover, status is untouched/undefined when erroring, so if we have:
 		// a)
@@ -155,8 +153,9 @@ public StartingTask start() {
 						break;
 					case RUNNING:
 						if (runningTask.matchesProblem(line)) {
-							runningTask.markAsFailed();		// start is marked as failed as STDOUT logger could still
-							problem = true;					// be running, so that's in undefined state
+							startingTask.markAsStarted();	// start is marked as failed as STDOUT logger could still
+							runningTask.markAsFailed();		// be running, so that's in undefined state
+							problem = true;
 						}
 						break;
 				}
