@@ -10,7 +10,7 @@ default public boolean failed() {
 
 public void waitFor() throws InterruptedException;
 
-public int result();
+public int result() throws InterruptedException;
 
 
 }

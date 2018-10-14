@@ -14,17 +14,42 @@
  *   limitations under the License.
  */
 
-package cat.calidos.eurinome.runtime.api;
+package cat.calidos.eurinome.runtime;
 
-import cat.calidos.eurinome.problems.EurinomeRuntimeException;
+import java.util.function.Function;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public interface RunningTask extends MutableTask {
+public class RunningOutputProcessor extends ExecOutputProcessor {
 
-public FinishedTask markAsFinished();
+ExecRunningTask task;
 
-public FinishedTask finishedTask();
+
+public RunningOutputProcessor(Function<String, Integer> matcher) {
+	super(matcher);
+}
+
+
+public void setTask(ExecRunningTask task) {
+	this.task = task;
+}
+
+
+@Override
+protected void processLine(String line) {
+	
+	System.out.println(">>"+line);
+	task.output.append(line);
+	if (task.isOneTime() && !task.isDone()) {
+		int percent = process(line);
+		task.setRemaining(percent);
+		// we do not take further action as we expect the process to finish regardless of percent remaining
+		// TODO: could add warnings here if we have further output and we have marked as zero percent
+	} else {
+		
+	}
+
+}
 
 }

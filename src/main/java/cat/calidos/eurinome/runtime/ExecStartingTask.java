@@ -16,12 +16,21 @@
 
 package cat.calidos.eurinome.runtime;
 
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.StartedProcess;
+import org.zeroturnaround.process.JavaProcess;
+import org.zeroturnaround.process.ProcessUtil;
+import org.zeroturnaround.process.Processes;
+import org.zeroturnaround.process.SystemProcess;
 
+import cat.calidos.eurinome.problems.EurinomeRuntimeException;
 import cat.calidos.eurinome.runtime.api.FinishedTask;
 import cat.calidos.eurinome.runtime.api.RunningTask;
 import cat.calidos.eurinome.runtime.api.StartingTask;
@@ -35,30 +44,36 @@ public class ExecStartingTask extends ExecTask implements StartingTask {
 
 private BiConsumer<ExecStartingTask, ExecRunningTask> startedCallback;
 private ExecRunningTask runningTask;
+private ExecStoppingTask stoppingTask;
 private ExecFinishedTask finishedTask;
 
 
 public ExecStartingTask(int type, 
-						Function<String, Integer> matcher, 
-						Predicate<String> problemMatcher,
+						ProcessExecutor executor,
+						StartingOutputProcessor outputProcessor, 
+						ExecProblemProcessor problemProcessor,
 						BiConsumer<ExecStartingTask, ExecRunningTask> startedCallback,
 						ExecRunningTask runningTask,
-						ExecFinishedTask finishedTask
-						) {
+						ExecStoppingTask stoppingTask,
+						ExecFinishedTask finishedTask) {
 
-	super(type, STARTING, matcher, problemMatcher);
-	
+	super(type, RUNNING, executor, outputProcessor, problemProcessor);
+
 	this.startedCallback = startedCallback;
 	this.runningTask = runningTask;
+	this.stoppingTask = stoppingTask;
 	this.finishedTask = finishedTask;
-	System.out.println("Starting, running="+runningTask);
-
+	
+	outputProcessor.setTask(this); 	// the processors need to mark us as NEXT or failed, so they need a ref to this
+	problemProcessor.setTask(this);	// specific instance
 
 }
+
 
 public void setRunningTask(ExecRunningTask runningTask) {
 	this.runningTask = runningTask;	//HACK: this is a hack as we are not creating singletons of running task in dagger
 }
+
 
 @Override
 public RunningTask runningTask() throws IllegalStateException {
@@ -66,18 +81,27 @@ public RunningTask runningTask() throws IllegalStateException {
 }
 
 
-public StoppingTask stop() {
+public StoppingTask stop() throws EurinomeRuntimeException {
 
-	// TODO Auto-generated method stub
-	return null;
+	status = STOPPED;
+//	try {
+//		int pid = (int) startedProcess.getProcess().pid();
+//		SystemProcess systemprocess = Processes.newPidProcess(pid);
+//		ProcessUtil.destroyGracefullyAndWait(systemprocess, 5, TimeUnit.MILLISECONDS);	//FIXME: this random
+//	} catch (IOException | InterruptedException | TimeoutException e) {
+//		throw new EurinomeRuntimeException("Problem destroying gracefully process", e);
+//	}
+
+	return stoppingTask;
+
 }
 
 
 @Override
 public RunningTask markAsStarted() {
 	
-	System.out.println("Mark as started process="+startedProcess);
-	runningTask.setProcess(startedProcess);
+	System.out.println("STARTING: Mark as started");
+	runningTask.startRedirectingOutput();
 	status = STARTED;
 	setRemaining(NEXT);
 	
@@ -90,8 +114,7 @@ public RunningTask markAsStarted() {
 
 @Override
 public FinishedTask markAsFailed() {
-	
-	finishedTask.setProcess(startedProcess);
+
 	setKO();
 	setRemaining(NEXT);
 

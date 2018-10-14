@@ -21,10 +21,10 @@ import cat.calidos.eurinome.problems.EurinomeRuntimeException;
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public interface RunningTask extends MutableTask {
+public interface MutableTask extends Task {
 
-public FinishedTask markAsFinished();
+public StoppingTask stop() throws EurinomeRuntimeException;
 
-public FinishedTask finishedTask();
+public FinishedTask markAsFailed();
 
 }

@@ -27,9 +27,13 @@ import javax.inject.Singleton;
 import org.zeroturnaround.exec.ProcessExecutor;
 
 import cat.calidos.eurinome.runtime.ExecFinishedTask;
+import cat.calidos.eurinome.runtime.ExecProblemProcessor;
 import cat.calidos.eurinome.runtime.ExecReadyTask;
 import cat.calidos.eurinome.runtime.ExecRunningTask;
 import cat.calidos.eurinome.runtime.ExecStartingTask;
+import cat.calidos.eurinome.runtime.ExecStoppingTask;
+import cat.calidos.eurinome.runtime.RunningOutputProcessor;
+import cat.calidos.eurinome.runtime.StartingOutputProcessor;
 import cat.calidos.eurinome.runtime.api.ReadyTask;
 import cat.calidos.eurinome.runtime.api.Task;
 import dagger.Module;
@@ -48,8 +52,9 @@ ReadyTask readyTask(@Named("Type") int type,
 					ProcessExecutor executor,
 					@Named("ProblemMatcher") Predicate<String> problemMatcher,
 					ExecStartingTask startingTask,
-					ExecRunningTask runningTask) {
-	return new ExecReadyTask(type, executor, problemMatcher, startingTask, runningTask);
+					ExecRunningTask runningTask,
+					ExecFinishedTask finishedTask) {
+	return new ExecReadyTask(type, executor, startingTask, runningTask, finishedTask);
 }
 
 
@@ -60,33 +65,71 @@ ProcessExecutor executor(@Named("Path") String... command) {
 
 
 @Provides @Singleton
-ExecStartingTask startingTask(@Named("Type") int type, 
-								@Named("StartedMatcher") Function<String, Integer> matcher,
-								@Named("ProblemMatcher") Predicate<String> problemMatcher,
-								@Named("StartedCallback") BiConsumer<ExecStartingTask, ExecRunningTask> startedCallback,
+ExecStartingTask startingTask(@Named("Type") int type,
+								ProcessExecutor executor,
+								StartingOutputProcessor startingOutputProcessor,
+								@Named("StartingProblemProcessor") ExecProblemProcessor problemProcessor,
+								@Named("StartedCallback") BiConsumer<ExecStartingTask, ExecRunningTask> started,
 								ExecRunningTask runningTask,
+								ExecStoppingTask stoppingTask,
 								ExecFinishedTask finishedTask) {
-	return new ExecStartingTask(type, matcher, problemMatcher, startedCallback, runningTask, finishedTask);
+	return new ExecStartingTask(type,
+								executor,
+								startingOutputProcessor,
+								problemProcessor,
+								started,
+								runningTask,
+								stoppingTask,
+								finishedTask);
 }
 
 
-//TODO: this should be a singleton as new instances are being created
+@Provides @Singleton
+StartingOutputProcessor startingOutputProcessor(@Named("StartedMatcher") Function<String, Integer> matcher) {
+	return new StartingOutputProcessor(matcher);
+}
+
+@Provides @Singleton @Named("StartingProblemProcessor") 
+ExecProblemProcessor startingProblemProcessor(@Named("ProblemMatcher") Predicate<String> problemMatcher) {
+	return new ExecProblemProcessor(problemMatcher);
+}
+
 @Provides @Singleton
 ExecRunningTask runningTask(@Named("Type") int type,
-							@Named("EffectiveRunningMatcher") Function<String, Integer> matcher,
-							@Named("ProblemMatcher") Predicate<String> problemMatcher,
+							ProcessExecutor executor,
+							RunningOutputProcessor runningOutputProcessor,
+							@Named("RunningProblemProcessor") ExecProblemProcessor problemProcessor,
 							ExecFinishedTask finishedTask,
 							@Named("FinishedCallback") BiConsumer<ExecRunningTask, ExecFinishedTask> callback) {
-	
-	final  ExecRunningTask runningTask = new ExecRunningTask(type, matcher, problemMatcher, finishedTask, callback);
-	
-	return runningTask;
+	return new ExecRunningTask(type, executor, runningOutputProcessor, problemProcessor, finishedTask, callback);
 }
 
 
 @Provides @Singleton
-ExecFinishedTask finishedTask(@Named("Type") int type, @Named("ProblemMatcher") Predicate<String> problemMatcher) {
-	return new ExecFinishedTask(type, problemMatcher);
+RunningOutputProcessor runningOutputProcessor(@Named("EffectiveRunningMatcher") Function<String, Integer> matcher) {
+	return new RunningOutputProcessor(matcher);
+}
+
+
+@Provides @Singleton @Named("RunningProblemProcessor") 
+ExecProblemProcessor problemProcessor(@Named("ProblemMatcher") Predicate<String> problemMatcher) {
+	return new ExecProblemProcessor(problemMatcher);
+}
+
+
+@Provides @Singleton
+ExecStoppingTask stoppingTask(@Named("Type") int type,
+								ProcessExecutor executor,
+								@Named("EffectiveStoppedMatcher") Function<String, Integer> stoppedMatcher,
+								@Named("ProblemMatcher") Predicate<String> problemMatcher,
+								ExecFinishedTask finishedTask) {
+	return new ExecStoppingTask(type, executor, null,  null, finishedTask);
+}
+
+
+@Provides @Singleton
+ExecFinishedTask finishedTask(@Named("Type") int type, ProcessExecutor executor) {
+	return new ExecFinishedTask(type, executor);
 }
 
 
@@ -100,8 +143,13 @@ BiConsumer<ExecStartingTask, ExecRunningTask> startedCallback(
 @Provides @Named("EffectiveRunningMatcher") 
 Function<String, Integer> matcher(@Nullable @Named("RunningMatcher") Function<String, Integer> matcher) {
 	return (matcher==null)? s -> Task.MAX : matcher;	// default matcher is progress is always 100%, wait for process
-}
+}														// to finish on its own
 
+
+@Provides @Named("EffectiveStoppedMatcher") 
+Function<String, Integer> stoppedMatcher(@Nullable @Named("StoppedMatcher") Function<String, Integer> matcher) {
+	return (matcher==null)? s -> Task.MAX : matcher;	// default matcher is progress is always 100%, wait for process
+}														// to finish on its own
 
 @Provides @Named("FinishedCallback") 
 BiConsumer<ExecRunningTask, ExecFinishedTask> finishedCallback(

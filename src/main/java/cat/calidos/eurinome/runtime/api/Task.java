@@ -26,8 +26,9 @@ public static int READY = 1001;
 public static int STARTING = 1002;
 public static int STARTED = 1003;
 public static int RUNNING = 1004;
-public static int STOPPING = 1005;
-public static int FINISHED = 1006;
+public static int STOPPED = 1005;
+public static int STOPPING = 1006;
+public static int FINISHED = 1007;
 
 public static int NEXT = 0;
 public static int MAX = 100;
@@ -36,13 +37,7 @@ public static int ONE_TIME = 1000;
 public static int LONG_RUNNING = 1100;
 
 
-/**	@return given a log line, it returns how much is remaining in the current state,
-* 	or negative if there is an error or some kind of problem. The remaining time is undefined for long running tasks.
-* 	Values are from 100 to 1 for percentage, 0 for stage completed and negative for errors
-*/
-public int matchesOutput(String line);
 
-public boolean matchesProblem(String line);
 
 /**	@return */
 public int getStatus();
@@ -72,7 +67,7 @@ public boolean isOK();
 
 
 default public boolean isDone() {
-	return getRemaining()==Task.NEXT;
+	return getRemaining()<=Task.NEXT;
 }
 
 

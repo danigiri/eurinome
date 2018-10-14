@@ -19,7 +19,11 @@ package cat.calidos.eurinome.runtime;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.StartedProcess;
+import org.zeroturnaround.exec.stream.LogOutputStream;
+import org.zeroturnaround.process.JavaProcess;
+import org.zeroturnaround.process.Processes;
 
 import cat.calidos.eurinome.runtime.api.Task;
 
@@ -30,47 +34,49 @@ public class ExecTask implements Task {
 
 protected int type;
 protected int status;
-private Function<String, Integer> matcher;
-private int remaining;
-private Predicate<String> problemMatcher;
-protected StartedProcess startedProcess;
+protected ProcessExecutor executor;
+
+protected ExecOutputProcessor logMatcher;
+protected ExecProblemProcessor problemMatcher;
 protected StringBuilder output;
+
+private int remaining = MAX;	// by default we have everything left to do
 private boolean isOK = true;
 
-public ExecTask(int type, int status) {
+
+public ExecTask(int type, int status, ProcessExecutor executor) {
 	
 	this.type = type;
 	this.status = status;
+	this.executor = executor;
+	
+}
+
+public ExecTask(int type, int status, ProcessExecutor executor, ExecOutputProcessor logMatcher, ExecProblemProcessor problemMatcher) {
+	
+	this(type, status, executor);
+	
+	this.logMatcher = logMatcher;
+	this.problemMatcher = problemMatcher;
+	
 	this.remaining = MAX;
 	this.output = new StringBuilder();
 
 }
 
 
-public ExecTask(int type, int status, Function<String, Integer> matcher, Predicate<String> problemMatcher) {
+public void startRedirectingOutput() {
 
-	this(type, status);
+	executor.redirectError(problemMatcher);
+	executor.redirectOutput(logMatcher);
+
+}
+
+public void stopRedirectingOutput() {
 	
-	this.matcher = matcher;
-	this.problemMatcher = problemMatcher;
+	executor.redirectError(null);
+	executor.redirectOutput(null);
 
-}
-
-
-public void setProcess(StartedProcess process) {
-	this.startedProcess = process;
-}
-
-
-@Override
-public int matchesOutput(String line) {
-	return matcher.apply(line);
-}
-
-
-@Override
-public boolean matchesProblem(String line) {
-	return problemMatcher.test(line);
 }
 
 
@@ -110,12 +116,6 @@ public void setKO() {
 @Override
 public boolean isOK() {
 	return isOK;
-}
-
-
-@Override
-public boolean isDone() {
-	return remaining<=Task.NEXT;
 }
 
 

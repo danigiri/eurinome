@@ -16,15 +16,40 @@
 
 package cat.calidos.eurinome.runtime;
 
+import java.util.function.Function;
+
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public class HelmFileTask {
+public class StartingOutputProcessor extends ExecOutputProcessor {
+
+ExecStartingTask startingTask;
 
 
-public HelmFileTask(String filePath) {
-	
+public StartingOutputProcessor(Function<String, Integer> matcher) {
+	super(matcher);
+}
+
+
+/**	this is needed as we will be creating the processor with this task */
+public void setTask(ExecStartingTask startingTask) {
+	this.startingTask = startingTask;
+}
+
+
+@Override
+protected void processLine(String line) {
+
+	System.out.println(">>"+line);
+	startingTask.output.append(line);
+	int percent = process(line);
+	startingTask.setRemaining(percent);
+	if (startingTask.isDone()) {
+		System.out.println("STARTING --> STARTED, marking and running callback");
+		startingTask.markAsStarted();
+	}
+
 }
 
 }

@@ -16,20 +16,17 @@
 
 package cat.calidos.eurinome.runtime.api;
 
+import cat.calidos.eurinome.problems.EurinomeRuntimeException;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public interface StartingTask extends Task {
+public interface StartingTask extends MutableTask {
 
 public RunningTask runningTask() throws IllegalStateException;
 
 public RunningTask markAsStarted();
 
-public FinishedTask markAsFailed();
-
 public FinishedTask finishedTask();
-
-public StoppingTask stop();
 
 }

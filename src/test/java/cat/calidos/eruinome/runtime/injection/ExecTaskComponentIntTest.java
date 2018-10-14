@@ -18,14 +18,17 @@ package cat.calidos.eruinome.runtime.injection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
+import cat.calidos.eurinome.problems.EurinomeRuntimeException;
 import cat.calidos.eurinome.runtime.api.FinishedTask;
 import cat.calidos.eurinome.runtime.api.ReadyTask;
 import cat.calidos.eurinome.runtime.api.RunningTask;
 import cat.calidos.eurinome.runtime.api.StartingTask;
+import cat.calidos.eurinome.runtime.api.StoppingTask;
 import cat.calidos.eurinome.runtime.api.Task;
 import cat.calidos.eurinome.runtime.injection.DaggerExecTaskComponent;
 
@@ -42,6 +45,7 @@ private boolean finishedCallbackCalled = false;
 @Test @DisplayName("Simple onetime task (IntTest)")
 public void testOneTimeExecSimpleTask() throws Exception {
 
+	System.out.println("TEST: START");
 	ReadyTask task = DaggerExecTaskComponent.builder()
 												.exec( "/bin/bash", "-c", "echo 'hello world'")
 												.type(Task.ONE_TIME)
@@ -53,7 +57,7 @@ public void testOneTimeExecSimpleTask() throws Exception {
 				() -> assertFalse(task.isDone(), "Task not started should not be 'done'"),
 				() -> assertEquals(Task.READY, task.getStatus(), "Task not started should be ready")
 	);
-	
+	System.out.println("TEST: about to call start");
 	StartingTask start = task.start();
 	start.spinUntil(Task.STARTED);
 	assertEquals("hello world", start.show());
@@ -75,15 +79,17 @@ public void testOneTimeExecSimpleTask() throws Exception {
 public void testOneTimeExecComplexTask() throws Exception {
 	
 	ReadyTask task = DaggerExecTaskComponent.builder()
-			.exec( "/bin/bash", "-c", "echo 'started' && sleep 1 && echo 100 && sleep 1 && echo 50 && echo 0")
-			.type(Task.ONE_TIME)
-			.startedMatcher(s -> s.equals("started") ? Task.NEXT : Task.MAX)
-			.startedCallback((s, r) -> {startedCallbackCalled = true;})
-			.runningMatcher(s -> Integer.parseInt(s))
-			.finishedCallback((r, f) -> {finishedCallbackCalled = true;})
-			.problemMatcher(s -> true)
-			.build()
-			.readyTask();
+												.exec("/bin/bash", 
+														"-c", 
+														"echo 'started' && sleep 1 && echo 100 && sleep 1 && echo 50 && echo 0")
+												.type(Task.ONE_TIME)
+												.startedMatcher(s -> s.equals("started") ? Task.NEXT : Task.MAX)
+												.startedCallback((s, r) -> {startedCallbackCalled = true;})
+												.runningMatcher(s -> Integer.parseInt(s))
+												.finishedCallback((r, f) -> {finishedCallbackCalled = true;})
+												.problemMatcher(s -> true)
+												.build()
+												.readyTask();
 	
 	assertAll("complex task",
 				() -> assertFalse(task.isDone()),
@@ -127,7 +133,6 @@ public void testOneTimeExecProblematicTask() throws Exception {
 	);
 
 	StartingTask start = task.start();
-	
 	start.spinUntil(Task.STARTED);
 	assertAll("problematic task",
 			() -> assertTrue(start.isDone(), "Started task should be completed"),
@@ -148,6 +153,54 @@ public void testOneTimeExecProblematicTask() throws Exception {
 				() -> assertFalse(finishedTask.isOK(), "finished failed task should not be OK"),
 				() -> assertEquals(127, finishedTask.result(), "result of command not found should be 127")
 	);
+	
+}
+
+
+@Test @DisplayName("Binary not found problematic task (IntTest)")
+@Disabled("Avoid dumping the stack trace for expected exception")
+public void testOneTimeBinaryNotFoundTask() {
+	// can't avoid the stacktrace being printed, so disabling for the time being
+
+	ReadyTask task = DaggerExecTaskComponent.builder()
+												.exec( "/bin/NOTFOUNDFORSURE")
+												.type(Task.ONE_TIME)
+												.startedMatcher(s -> s.equals("started") ? Task.NEXT : Task.MAX)
+												.problemMatcher(s -> s.contains("command not found"))
+												.build()
+												.readyTask();
+	assertAll("problematic task",
+			() -> assertFalse(task.isDone()),
+			() -> assertEquals(Task.READY, task.getStatus())
+	);
+	assertThrows(EurinomeRuntimeException.class, () -> task.start());
+
+}
+
+
+//@Test @DisplayName("Stop starting task (IntTest)")
+public void testStopOneTimeTask() throws Exception {
+	
+	ReadyTask task = DaggerExecTaskComponent.builder()
+			.exec( "/bin/bash", "-c", "sleep 300")
+			.type(Task.ONE_TIME)
+			.startedMatcher(s -> s.equals("started") ? Task.NEXT : Task.MAX)
+			.problemMatcher(s -> true)	// if anything shows on STDERR
+			.build()
+			.readyTask();
+	assertAll("task",
+			() -> assertFalse(task.isDone()),
+			() -> assertEquals(Task.READY, task.getStatus())
+	);
+
+	StartingTask start = task.start();
+	assertAll("task",
+			() -> assertFalse(start.isDone()),
+			() -> assertEquals(Task.STARTING, start.getStatus())
+	);
+	
+	StoppingTask stoppingTask = start.stop();
+	assertNotNull(stoppingTask);
 	
 }
 

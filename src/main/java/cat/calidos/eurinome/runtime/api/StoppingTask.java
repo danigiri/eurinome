@@ -20,7 +20,7 @@ package cat.calidos.eurinome.runtime.api;
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public interface StoppingTask extends Task {
+public interface StoppingTask extends MutableTask {
 
 
 public FinishedTask finishedTask() throws IllegalStateException;

@@ -52,6 +52,7 @@ interface Builder {
 	@BindsInstance Builder startedMatcher(@Named("StartedMatcher") Function<String, Integer> matcher);
 	@BindsInstance Builder startedCallback(@Nullable BiConsumer<ExecStartingTask, ExecRunningTask> callback);
 	@BindsInstance Builder runningMatcher(@Nullable @Named("RunningMatcher") Function<String, Integer> matcher);
+	@BindsInstance Builder stoppedMatcher(@Nullable @Named("StoppedMatcher") Function<String, Integer> matcher);
 	@BindsInstance Builder finishedCallback(@Nullable BiConsumer<ExecRunningTask, ExecFinishedTask> callback);
 	@BindsInstance Builder problemMatcher(@Named("ProblemMatcher") Predicate<String> problemMatcher);
 

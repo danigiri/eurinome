@@ -16,65 +16,54 @@
 
 package cat.calidos.eurinome.runtime;
 
-import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.zeroturnaround.exec.ProcessExecutor;
 
+import cat.calidos.eurinome.problems.EurinomeRuntimeException;
 import cat.calidos.eurinome.runtime.api.FinishedTask;
-
+import cat.calidos.eurinome.runtime.api.StoppingTask;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public class ExecFinishedTask extends ExecTask implements FinishedTask {
+public class ExecStoppingTask extends ExecTask implements StoppingTask {
+
+private ExecFinishedTask finishedTask;
 
 
-private Process process;
+public ExecStoppingTask(int type, 
+		ProcessExecutor executor,
+		ExecOutputProcessor logMatcher, 
+		ExecProblemProcessor problemMatcher,
+		ExecFinishedTask finishedTask) {
 
+	super(type, STARTING, executor, logMatcher, problemMatcher);
 
-public ExecFinishedTask(int type, ProcessExecutor executor) {
-
-	super(type, FINISHED, executor);
-
-	this.setRemaining(NEXT);	// by definition we are done
-
-}
-
-
-@Override
-public boolean isOK() {
-	try {
-		return result()==0;	// we override this method and look at the exit code, if interrupted, we assume KO
-	} catch (InterruptedException e) {
-		return false;
-	}
-}
-
-
-@Override
-public void waitFor() throws InterruptedException {
-	while (process==null) {
-		Thread.sleep(10);
-	}
-	process.waitFor();
-}
-
-
-@Override
-public int result() throws InterruptedException {
-
-	while (process==null) {
-		Thread.sleep(10);
-	}
+	this.finishedTask = finishedTask;
 	
-	return process.exitValue();
-
+	//problemMatcher.setTask(this);
+	
 }
 
+@Override
+public FinishedTask finishedTask() throws IllegalStateException {
+	return finishedTask;
+}
 
-public void setProcess(Process process) {
-	this.process = process;
+@Override
+public StoppingTask stop() throws EurinomeRuntimeException {
+
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public FinishedTask markAsFailed() {
+
+	// TODO Auto-generated method stub
+	return null;
 }
 
 }

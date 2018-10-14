@@ -14,17 +14,49 @@
  *   limitations under the License.
  */
 
-package cat.calidos.eurinome.runtime.api;
+package cat.calidos.eurinome.runtime;
 
-import cat.calidos.eurinome.problems.EurinomeRuntimeException;
+import java.util.function.Predicate;
+
+import org.zeroturnaround.exec.stream.LogOutputStream;
+
+import cat.calidos.eurinome.runtime.api.MutableTask;
+
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public interface RunningTask extends MutableTask {
+public class ExecProblemProcessor extends LogOutputStream {
 
-public FinishedTask markAsFinished();
+private MutableTask task;
+private Predicate<String> matcher;
 
-public FinishedTask finishedTask();
+
+public ExecProblemProcessor(Predicate<String> matcher) {
+
+	this.matcher = matcher;
+
+}
+
+
+public void setTask(MutableTask task) {
+	this.task = task;
+}
+
+
+public boolean matchesProblem(String line) {
+	return matcher.test(line);
+}
+
+
+@Override
+protected void processLine(String line) {
+
+	System.err.println(">>"+line);
+	if (matcher.test(line)) {
+		task.markAsFailed();
+	}
+}
+
 
 }

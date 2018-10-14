@@ -16,13 +16,15 @@
 
 package cat.calidos.eurinome.runtime.api;
 
+import cat.calidos.eurinome.problems.EurinomeRuntimeException;
 
-/**
+/** Generic task holder, where all configuration is stored/created
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public interface ReadyTask extends Task {
 
 
-public StartingTask start();
+/** Start this task and @return a starting task */
+public StartingTask start() throws EurinomeRuntimeException;
 
 }
