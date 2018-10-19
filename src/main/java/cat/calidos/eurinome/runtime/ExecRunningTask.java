@@ -35,6 +35,7 @@ public class ExecRunningTask extends ExecTask implements RunningTask {
 private ExecFinishedTask finishedTask;
 private BiConsumer<ExecRunningTask, ExecFinishedTask> finishedCallBack;
 
+
 public ExecRunningTask(int type,
 						ProcessExecutor executor,
 						RunningOutputProcessor outputProcessor,
@@ -76,8 +77,10 @@ public FinishedTask markAsFinished() {
 @Override
 public FinishedTask markAsFailed() {
 
+	System.err.println("Marking as failed");
 	setKO();
 	setRemaining(NEXT);
+	System.err.println("Marked as failed");
 	
 	return finishedTask();
 

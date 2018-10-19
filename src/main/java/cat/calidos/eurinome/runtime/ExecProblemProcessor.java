@@ -54,6 +54,7 @@ protected void processLine(String line) {
 
 	System.err.println(">>"+line);
 	if (matcher.test(line)) {
+		System.err.println("MARKED AS PROBLERMATIC");
 		task.markAsFailed();
 	}
 }
