@@ -57,7 +57,7 @@ public ExecStartingTask(int type,
 						ExecStoppingTask stoppingTask,
 						ExecFinishedTask finishedTask) {
 
-	super(type, RUNNING, executor, outputProcessor, problemProcessor);
+	super(type, STARTING, executor, outputProcessor, problemProcessor);
 
 	this.startedCallback = startedCallback;
 	this.runningTask = runningTask;

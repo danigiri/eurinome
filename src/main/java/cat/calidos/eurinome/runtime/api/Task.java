@@ -83,5 +83,20 @@ default void spinUntil(int status) throws InterruptedException {
 
 }
 
+default String translate(int status) {
+
+	switch(status) {
+		case READY: return "READY";
+		case STARTING: return "STARTING";  
+		case STARTED: return "STARTED"; 
+		case RUNNING: return "RUNNING";
+		case STOPPED: return "STOPPED";
+		case STOPPING: return "STOPPING";
+		case FINISHED: return "FINISHED";
+	}
+	throw new IllegalStateException("Attempting to translate an unkown state");
+
+}
+
 
 }

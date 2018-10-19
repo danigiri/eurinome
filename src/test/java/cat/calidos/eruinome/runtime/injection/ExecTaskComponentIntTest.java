@@ -117,7 +117,7 @@ public void testOneTimeExecComplexTask() throws Exception {
 }
 
 
-@Test @DisplayName("Simple problematic task (IntTest)") //@RepeatedTest(5)
+@Test @DisplayName("Simple problematic task (IntTest)") @RepeatedTest(5)
 public void testOneTimeExecProblematicTask() throws Exception {
 
 	ReadyTask task = DaggerExecTaskComponent.builder()
@@ -181,13 +181,13 @@ public void testOneTimeBinaryNotFoundTask() {
 }
 
 
-//@Test @DisplayName("Stop starting task (IntTest)")
+@Test @DisplayName("Stop starting task (IntTest)")
 public void testStopOneTimeTask() throws Exception {
 	
 	ReadyTask task = DaggerExecTaskComponent.builder()
 			.exec( "/bin/bash", "-c", "sleep 300")
 			.type(Task.ONE_TIME)
-			.startedMatcher(s -> s.equals("started") ? Task.NEXT : Task.MAX)
+			.startedMatcher(s -> s.equals("started") ? Task.NEXT : Task.MAX)	// this will never match
 			.problemMatcher(s -> true)	// if anything shows on STDERR
 			.build()
 			.readyTask();
@@ -199,7 +199,10 @@ public void testStopOneTimeTask() throws Exception {
 	StartingTask start = task.start();
 	assertAll("task",
 			() -> assertFalse(start.isDone()),
-			() -> assertEquals(Task.STARTING, start.getStatus())
+			() -> {
+				int status = start.getStatus();
+				assertEquals(Task.STARTING, status, "Starting task should be STARTING ("+start.translate(status)+")");
+			}
 	);
 	
 	StoppingTask stoppingTask = start.stop();
