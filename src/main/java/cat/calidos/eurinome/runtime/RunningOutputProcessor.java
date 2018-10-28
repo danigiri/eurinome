@@ -18,12 +18,14 @@ package cat.calidos.eurinome.runtime;
 
 import java.util.function.Function;
 
+import cat.calidos.eurinome.runtime.api.MutableTask;
+
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class RunningOutputProcessor extends ExecOutputProcessor {
 
-ExecRunningTask task;
+MutableTask task;
 
 
 public RunningOutputProcessor(Function<String, Integer> matcher) {
@@ -39,8 +41,8 @@ public void setTask(ExecRunningTask task) {
 @Override
 protected void processLine(String line) {
 	
-	System.out.println(">>"+line);
-	task.output.append(line);
+	System.out.println("[RUNNING]>>"+line);
+	task.appendToOutput(line);
 	if (task.isOneTime() && !task.isDone()) {
 		int percent = process(line);
 		task.setRemaining(percent);

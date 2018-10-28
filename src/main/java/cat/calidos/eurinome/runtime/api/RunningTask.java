@@ -16,15 +16,13 @@
 
 package cat.calidos.eurinome.runtime.api;
 
-import cat.calidos.eurinome.problems.EurinomeRuntimeException;
-
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public interface RunningTask extends MutableTask {
 
-public FinishedTask markAsFinished();
-
-public FinishedTask finishedTask();
+//public FinishedTask markAsFinished();
+//
+//public FinishedTask finishedTask();
 
 }

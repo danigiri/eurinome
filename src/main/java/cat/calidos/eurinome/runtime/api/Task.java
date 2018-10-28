@@ -37,8 +37,6 @@ public static int ONE_TIME = 1000;
 public static int LONG_RUNNING = 1100;
 
 
-
-
 /**	@return */
 public int getStatus();
 
@@ -67,7 +65,7 @@ public boolean isOK();
 
 
 default public boolean isDone() {
-	return getRemaining()<=Task.NEXT;
+	return getRemaining()<=Task.NEXT || getStatus()==FINISHED;
 }
 
 
@@ -82,6 +80,19 @@ default void spinUntil(int status) throws InterruptedException {
 	}
 
 }
+
+
+default void spinUntil(int status, int timeoutMillis) throws InterruptedException {
+	long t = System.currentTimeMillis();
+	while (getStatus()!=status && isOK() && System.currentTimeMillis()-t<timeoutMillis) {
+		Thread.sleep(10);	// this seems more effective than spinwait
+	}
+	if (!isOK()) {
+		throw new InterruptedException("While waiting, the task failed");
+	}
+
+}
+
 
 default String translate(int status) {
 

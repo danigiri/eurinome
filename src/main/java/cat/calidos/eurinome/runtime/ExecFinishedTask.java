@@ -16,9 +16,6 @@
 
 package cat.calidos.eurinome.runtime;
 
-import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
-
 import org.zeroturnaround.exec.ProcessExecutor;
 
 import cat.calidos.eurinome.runtime.api.FinishedTask;
@@ -28,9 +25,6 @@ import cat.calidos.eurinome.runtime.api.FinishedTask;
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class ExecFinishedTask extends ExecTask implements FinishedTask {
-
-
-private Process process;
 
 
 public ExecFinishedTask(int type, ProcessExecutor executor) {
@@ -73,8 +67,25 @@ public int result() throws InterruptedException {
 }
 
 
-public void setProcess(Process process) {
-	this.process = process;
+@Override
+public void setRemaining(int percent) {
+
+	// TODO Auto-generated method stub
+	
+}
+
+
+@Override
+public int getRemaining() {
+	return NEXT;	// by definition we do not have anything left to do
+}
+
+
+@Override
+public String show() {
+
+	// TODO Auto-generated method stub
+	return null;
 }
 
 }

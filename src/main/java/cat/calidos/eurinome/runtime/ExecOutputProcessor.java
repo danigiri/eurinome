@@ -6,12 +6,25 @@ import java.util.function.Predicate;
 import org.zeroturnaround.exec.stream.LogOutputStream;
 
 
-public abstract class ExecOutputProcessor extends LogOutputStream {
+public class ExecOutputProcessor extends LogOutputStream {
 
 private Function<String, Integer> matcher;
+private ExecOutputProcessor indirectProcessor;
+
+public ExecOutputProcessor() {}
 
 public ExecOutputProcessor(Function<String, Integer> matcher) {
 	this.matcher = matcher;
+}
+
+
+public ExecOutputProcessor(ExecOutputProcessor indirectProcessor) {
+	this.indirectProcessor = indirectProcessor;
+} 
+
+
+public void setIndirectProcessor(ExecOutputProcessor indirectProcessor) {
+	this.indirectProcessor = indirectProcessor;
 }
 
 
@@ -20,7 +33,19 @@ public ExecOutputProcessor(Function<String, Integer> matcher) {
 * 	Values are from 100 to 1 for percentage, 0 for stage completed and negative for errors
 */
 public int process(String line) {
-	return matcher.apply(line);
+	return (indirectProcessor==null) ? matcher.apply(line) : indirectProcessor.process(line);
 }
+
+
+@Override
+protected void processLine(String line) {
+	if (indirectProcessor==null) {
+		process(line);
+	} else {
+		indirectProcessor.processLine(line);
+	}
+}
+
+
 
 }

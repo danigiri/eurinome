@@ -23,8 +23,16 @@ import cat.calidos.eurinome.problems.EurinomeRuntimeException;
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public interface MutableTask extends Task {
 
+public void appendToOutput(String append);
+
+public void setRemaining(int percent);
+
 public StoppingTask stop() throws EurinomeRuntimeException;
 
 public FinishedTask markAsFailed();
+
+public FinishedTask markAsFinished();
+
+public FinishedTask finishedTask();
 
 }

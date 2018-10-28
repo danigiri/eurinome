@@ -40,16 +40,16 @@ import cat.calidos.eurinome.runtime.api.StoppingTask;
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public class ExecStartingTask extends ExecTask implements StartingTask {
+public class ExecStartingTask extends ExecMutableTask implements StartingTask {
 
 private BiConsumer<ExecStartingTask, ExecRunningTask> startedCallback;
 private ExecRunningTask runningTask;
-private ExecStoppingTask stoppingTask;
-private ExecFinishedTask finishedTask;
 
 
 public ExecStartingTask(int type, 
 						ProcessExecutor executor,
+						ExecOutputProcessor outputProcessorWrapper,
+						ExecProblemProcessor problemProcessorWrapper,
 						StartingOutputProcessor outputProcessor, 
 						ExecProblemProcessor problemProcessor,
 						BiConsumer<ExecStartingTask, ExecRunningTask> startedCallback,
@@ -57,12 +57,18 @@ public ExecStartingTask(int type,
 						ExecStoppingTask stoppingTask,
 						ExecFinishedTask finishedTask) {
 
-	super(type, STARTING, executor, outputProcessor, problemProcessor);
+	super(type, 
+			STARTING, 
+			executor, 
+			outputProcessorWrapper, 
+			problemProcessorWrapper, 
+			outputProcessor, 
+			problemProcessor, 
+			stoppingTask, 
+			finishedTask);
 
 	this.startedCallback = startedCallback;
 	this.runningTask = runningTask;
-	this.stoppingTask = stoppingTask;
-	this.finishedTask = finishedTask;
 	
 	outputProcessor.setTask(this); 	// the processors need to mark us as NEXT or failed, so they need a ref to this
 	problemProcessor.setTask(this);	// specific instance
@@ -81,26 +87,10 @@ public RunningTask runningTask() throws IllegalStateException {
 }
 
 
-public StoppingTask stop() throws EurinomeRuntimeException {
-
-	status = STOPPED;
-//	try {
-//		int pid = (int) startedProcess.getProcess().pid();
-//		SystemProcess systemprocess = Processes.newPidProcess(pid);
-//		ProcessUtil.destroyGracefullyAndWait(systemprocess, 5, TimeUnit.MILLISECONDS);	//FIXME: this random
-//	} catch (IOException | InterruptedException | TimeoutException e) {
-//		throw new EurinomeRuntimeException("Problem destroying gracefully process", e);
-//	}
-
-	return stoppingTask;
-
-}
-
-
 @Override
 public RunningTask markAsStarted() {
 	
-	System.out.println("STARTING: Mark as started");
+	System.out.println("STARTING: Mark as started, about to redirect to running task");
 	runningTask.startRedirectingOutput();
 	status = STARTED;
 	setRemaining(NEXT);
@@ -111,21 +101,5 @@ public RunningTask markAsStarted() {
 
 }
 
-
-@Override
-public FinishedTask markAsFailed() {
-
-	setKO();
-	setRemaining(NEXT);
-
-	return finishedTask();
-
-}
-
-
-@Override
-public FinishedTask finishedTask() {
-	return finishedTask;
-}
 
 }

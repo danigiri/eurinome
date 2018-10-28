@@ -16,8 +16,6 @@
 
 package cat.calidos.eurinome.runtime.api;
 
-import cat.calidos.eurinome.problems.EurinomeRuntimeException;
-
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,6 +25,6 @@ public RunningTask runningTask() throws IllegalStateException;
 
 public RunningTask markAsStarted();
 
-public FinishedTask finishedTask();
+//public FinishedTask finishedTask();
 
 }

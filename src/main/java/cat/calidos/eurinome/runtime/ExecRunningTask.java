@@ -30,22 +30,33 @@ import cat.calidos.eurinome.runtime.api.StoppingTask;
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public class ExecRunningTask extends ExecTask implements RunningTask {
+public class ExecRunningTask extends ExecMutableTask implements RunningTask {
 
+private ExecStoppingTask stoppingTask;
 private ExecFinishedTask finishedTask;
 private BiConsumer<ExecRunningTask, ExecFinishedTask> finishedCallBack;
 
 
 public ExecRunningTask(int type,
 						ProcessExecutor executor,
+						ExecOutputProcessor outputProcessorWrapper,
+						ExecProblemProcessor problemProcessorWrapper,
 						RunningOutputProcessor outputProcessor,
 						ExecProblemProcessor problemProcessor,
+						ExecStoppingTask stoppingTask,
 						ExecFinishedTask finishedTask,
 						BiConsumer<ExecRunningTask, ExecFinishedTask> finishedCallBack) {
 
-	super(type, RUNNING, executor);
+	super(type, 
+			RUNNING, 
+			executor, 
+			outputProcessorWrapper, 
+			problemProcessorWrapper, 
+			outputProcessor, 
+			problemProcessor, 
+			stoppingTask, 
+			finishedTask);
 
-	this.finishedTask = finishedTask;
 	this.finishedCallBack = finishedCallBack;
 
 	outputProcessor.setTask(this);
@@ -57,39 +68,22 @@ public ExecRunningTask(int type,
 @Override
 public StoppingTask stop() {
 
-	// TODO Auto-generated method stub
-	return null;
+	status = STOPPED;
+	
+	return stoppingTask;
 }
 
 
 @Override
 public FinishedTask markAsFinished() {
 
-	System.out.println("Mark as finished");
+	System.out.println("RUNNING: [Mark as finished]");
 	status = FINISHED;
 	setRemaining(NEXT);
-	
 	finishedCallBack.accept(this, finishedTask);
-	
-	return finishedTask;
-}
-
-@Override
-public FinishedTask markAsFailed() {
-
-	System.err.println("Marking as failed");
-	setKO();
-	setRemaining(NEXT);
-	System.err.println("Marked as failed");
 	
 	return finishedTask();
 
-}
-
-
-@Override
-public FinishedTask finishedTask() {
-	return finishedTask;
 }
 
 

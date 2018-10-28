@@ -16,54 +16,58 @@
 
 package cat.calidos.eurinome.runtime;
 
+import java.io.IOException;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.zeroturnaround.exec.ProcessExecutor;
+import org.zeroturnaround.process.Processes;
+import org.zeroturnaround.process.SystemProcess;
 
 import cat.calidos.eurinome.problems.EurinomeRuntimeException;
 import cat.calidos.eurinome.runtime.api.FinishedTask;
 import cat.calidos.eurinome.runtime.api.StoppingTask;
+import cat.calidos.eurinome.runtime.api.Task;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public class ExecStoppingTask extends ExecTask implements StoppingTask {
-
-private ExecFinishedTask finishedTask;
+public class ExecStoppingTask extends ExecMutableTask implements StoppingTask {
 
 
 public ExecStoppingTask(int type, 
-		ProcessExecutor executor,
-		ExecOutputProcessor logMatcher, 
-		ExecProblemProcessor problemMatcher,
-		ExecFinishedTask finishedTask) {
-
-	super(type, STARTING, executor, logMatcher, problemMatcher);
-
-	this.finishedTask = finishedTask;
-	
-	//problemMatcher.setTask(this);
-	
+						ProcessExecutor executor,
+						ExecOutputProcessor outputProcessorWrapper,
+						ExecProblemProcessor problemProcessorWrapper,
+						ExecOutputProcessor logProcessor, 
+						ExecProblemProcessor problemProcessor,
+						ExecFinishedTask finishedTask) {
+	super(type, 
+			STOPPING, 
+			executor, 
+			outputProcessorWrapper, 
+			problemProcessorWrapper, 
+			logProcessor, 
+			problemProcessor, 
+			null, 
+			finishedTask);
 }
 
-@Override
-public FinishedTask finishedTask() throws IllegalStateException {
-	return finishedTask;
-}
 
 @Override
 public StoppingTask stop() throws EurinomeRuntimeException {
 
-	// TODO Auto-generated method stub
-	return null;
+	int pid = (int) process.pid();
+	SystemProcess systemprocess = Processes.newPidProcess(pid);	// race condition, pid may not exist from the call
+	try {														// to the destroy :)
+		systemprocess.destroyForcefully();
+	} catch (IOException | InterruptedException e) {
+		throw new EurinomeRuntimeException("Problem killing stopping process", e);
+	}
+	
+	return this;
+
 }
 
-@Override
-public FinishedTask markAsFailed() {
-
-	// TODO Auto-generated method stub
-	return null;
-}
 
 }

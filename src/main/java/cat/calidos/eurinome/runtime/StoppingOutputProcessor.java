@@ -20,38 +20,31 @@ import java.util.function.Function;
 
 import cat.calidos.eurinome.runtime.api.MutableTask;
 
-
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public class StartingOutputProcessor extends ExecOutputProcessor {
+public class StoppingOutputProcessor extends ExecOutputProcessor {
 
-ExecStartingTask startingTask;
+MutableTask task;
 
 
-public StartingOutputProcessor(Function<String, Integer> matcher) {
+public StoppingOutputProcessor(Function<String, Integer> matcher) {
 	super(matcher);
-}
-
-
-/**	this is needed as we will be creating the processor with this task */
-public void setTask(ExecStartingTask startingTask) {
-	this.startingTask = startingTask;
 }
 
 
 @Override
 protected void processLine(String line) {
 
-	System.out.println("[STARTING]>>"+line);
-	startingTask.appendToOutput(line);
+	System.out.println("[STOPPING]>>"+line);
+	task.appendToOutput(line);
 	int percent = process(line);
-	startingTask.setRemaining(percent);
-	if (startingTask.isDone()) {
-		System.out.println("STARTING --> STARTED, marking and running callback");
-		startingTask.markAsStarted();
+	task.setRemaining(percent);
+	System.out.println("Marked remaining percentage");	
+	if (task.isDone()) {
+		System.out.println("STOPPING --> FINISHED, marking");
+		task.markAsFinished();
 	}
-
 }
 
 

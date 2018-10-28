@@ -30,17 +30,28 @@ public class ExecProblemProcessor extends LogOutputStream {
 
 private MutableTask task;
 private Predicate<String> matcher;
+private ExecProblemProcessor indirectProcessor;
+
+
+public ExecProblemProcessor() {}
 
 
 public ExecProblemProcessor(Predicate<String> matcher) {
-
 	this.matcher = matcher;
+}
 
+public ExecProblemProcessor(ExecProblemProcessor indirectProcessor) {
+	this.indirectProcessor = indirectProcessor;
 }
 
 
 public void setTask(MutableTask task) {
 	this.task = task;
+}
+
+
+public void setIndirectProcessor(ExecProblemProcessor indirectProcessor) {
+	this.indirectProcessor = indirectProcessor;
 }
 
 
@@ -52,11 +63,23 @@ public boolean matchesProblem(String line) {
 @Override
 protected void processLine(String line) {
 
+	if (indirectProcessor!=null) {
+		indirectProcessor.processLine(line);
+	} else {
+		defaultProcessLine(line);
+	}
+
+}
+
+
+private void defaultProcessLine(String line) {
+	
 	System.err.println(">>"+line);
 	if (matcher.test(line)) {
 		System.err.println("MARKED AS PROBLERMATIC");
 		task.markAsFailed();
 	}
+	
 }
 
 

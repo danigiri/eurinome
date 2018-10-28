@@ -39,12 +39,15 @@ private ProcessExecutor executor;
 private StartedProcess startedProcess;
 private ExecStartingTask startingTask;
 private ExecRunningTask runningTask;
+private ExecStoppingTask stoppingTask;
 private ExecFinishedTask finishedTask;
+
 
 public ExecReadyTask(int type, 
 						ProcessExecutor executor,
 						ExecStartingTask startingTask,
 						ExecRunningTask runningTask,
+						ExecStoppingTask stoppingTask,
 						ExecFinishedTask finishedTask) {
 
 		super(type, READY, executor);	// no matchers for ready tasks 
@@ -52,6 +55,7 @@ public ExecReadyTask(int type,
 		this.executor = executor;
 		this.startingTask = startingTask;
 		this.runningTask = runningTask;
+		this.stoppingTask = stoppingTask;
 		this.finishedTask = finishedTask;
 
 		startingTask.setRunningTask(runningTask);	// enforce the same instance
@@ -113,7 +117,11 @@ public StartingTask start() throws EurinomeRuntimeException {
 	startingTask.startRedirectingOutput();
 	try {
 		startedProcess = executor.start();
-		finishedTask.setProcess(startedProcess.getProcess()); //FIXME: race condition here, we may be finished already
+		//FIXME: race condition here, we may be finished already if the process starts and finishes fast
+		process = startedProcess.getProcess();
+		startingTask.setProcess(process);
+		stoppingTask.setProcess(process);
+		finishedTask.setProcess(process);
 	} catch (IOException e) {
 		throw new EurinomeRuntimeException("Had a problem launching "+executor.getCommand(), e);
 	}
@@ -122,6 +130,28 @@ public StartingTask start() throws EurinomeRuntimeException {
 
 	return startingTask;
 
+}
+
+
+@Override
+public void setRemaining(int percent) {}
+
+
+@Override
+public int getRemaining() {
+	return MAX;
+}
+
+
+@Override
+public String show() {
+	return "READY TASK ["+executor.getCommand()+"]";
+}
+
+
+@Override
+public String toString() {
+	return show();
 }
 
 

@@ -16,32 +16,26 @@
 
 package cat.calidos.eurinome.runtime;
 
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 import org.zeroturnaround.exec.ProcessExecutor;
-import org.zeroturnaround.exec.StartedProcess;
-import org.zeroturnaround.exec.stream.LogOutputStream;
-import org.zeroturnaround.process.JavaProcess;
-import org.zeroturnaround.process.Processes;
 
 import cat.calidos.eurinome.runtime.api.Task;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public class ExecTask implements Task {
+public abstract class ExecTask implements Task {
 
 protected int type;
 protected int status;
+protected Process process;
 protected ProcessExecutor executor;
 
+private ExecOutputProcessor outputProcessorWrapper;
 protected ExecOutputProcessor logMatcher;
 protected ExecProblemProcessor problemMatcher;
-protected StringBuilder output;
 
-private int remaining = MAX;	// by default we have everything left to do
 private boolean isOK = true;
+private ExecProblemProcessor problemProcessorWrapper;
 
 
 public ExecTask(int type, int status, ProcessExecutor executor) {
@@ -49,46 +43,59 @@ public ExecTask(int type, int status, ProcessExecutor executor) {
 	this.type = type;
 	this.status = status;
 	this.executor = executor;
-	
+
 }
 
-public ExecTask(int type, int status, ProcessExecutor executor, ExecOutputProcessor logMatcher, ExecProblemProcessor problemMatcher) {
+
+public ExecTask(int type, 
+				int status, 
+				ProcessExecutor executor, 
+				ExecOutputProcessor outputProcessorWrapper,
+				ExecProblemProcessor problemProcessorWrapper,
+				ExecOutputProcessor logMatcher, 
+				ExecProblemProcessor problemMatcher) {
 	
 	this(type, status, executor);
 	
 	this.logMatcher = logMatcher;
 	this.problemMatcher = problemMatcher;
 	
-	this.remaining = MAX;
-	this.output = new StringBuilder();
+	this.outputProcessorWrapper = outputProcessorWrapper;
+	this.problemProcessorWrapper = problemProcessorWrapper;
 
 }
 
 
 public void startRedirectingOutput() {
 
-	executor.redirectError(problemMatcher);
-	executor.redirectOutput(logMatcher);
+	// we are using the indirection as the executor.redirect* methods are non-reentrant, namely, if they are called
+	// from within a callback, they have no effect, so we use a level of indirection
+	
+	System.out.println("REDIRECTING (INDIRECTLY)");
+	problemProcessorWrapper.setIndirectProcessor(problemMatcher);
+	outputProcessorWrapper.setIndirectProcessor(logMatcher);
+	executor.redirectError(problemProcessorWrapper);
+	executor.redirectOutput(outputProcessorWrapper);
 
 }
 
+
 public void stopRedirectingOutput() {
-	
+
 	executor.redirectError(null);
 	executor.redirectOutput(null);
 
 }
 
 
-@Override
-public String show() {
-	return output.toString();
+public void setProcess(Process process) {
+	this.process = process;
 }
 
 
 @Override
-public int getStatus() {
-	return status;
+public int getStatus() {	// if the process has somehow died, we mark as finished
+	return (process!=null && !process.isAlive()) ? Task.FINISHED : status;
 }
 
 
@@ -97,17 +104,6 @@ public int getType() {
 	return type;
 }
 
-
-@Override
-public synchronized void setRemaining(int percent) {	// we have the STDOUT logger and STDEER logger changing this
-	remaining = Math.min(Math.min(MAX, percent), remaining); // we never go up
-}
-
-
-@Override
-public int getRemaining() {
-	return remaining;
-}
 
 public void setKO() {
 	isOK = false;
