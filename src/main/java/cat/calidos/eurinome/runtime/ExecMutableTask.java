@@ -107,7 +107,11 @@ public FinishedTask markAsFailed() {
 
 @Override
 public FinishedTask markAsFinished() {
-	throw new IllegalStateException("Illegal state transition: cannot mark as finished");
+
+	status = FINISHED;
+
+	return finishedTask();
+
 }
 
 
@@ -124,9 +128,9 @@ public String show() {
 
 
 public FinishedTask finishedTask() {
-	if (status!=FINISHED) {
-		throw new IllegalStateException("Accessing finished task when we are not finished");
-	}
+//	if (status!=FINISHED) {
+//		throw new IllegalStateException("Accessing finished task when we are not finished ("+translate(status)+")");
+//	}
 	return finishedTask;
 }
 

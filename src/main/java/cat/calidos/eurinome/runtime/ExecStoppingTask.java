@@ -39,18 +39,22 @@ public ExecStoppingTask(int type,
 						ProcessExecutor executor,
 						ExecOutputProcessor outputProcessorWrapper,
 						ExecProblemProcessor problemProcessorWrapper,
-						ExecOutputProcessor logProcessor, 
+						StoppingOutputProcessor outputProcessor, 
 						ExecProblemProcessor problemProcessor,
 						ExecFinishedTask finishedTask) {
+	
 	super(type, 
 			STOPPING, 
 			executor, 
 			outputProcessorWrapper, 
 			problemProcessorWrapper, 
-			logProcessor, 
+			outputProcessor, 
 			problemProcessor, 
 			null, 
 			finishedTask);
+	
+	outputProcessor.setTask(this);
+	problemProcessor.setTask(this);
 }
 
 

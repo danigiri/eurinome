@@ -33,6 +33,11 @@ public StoppingOutputProcessor(Function<String, Integer> matcher) {
 }
 
 
+public void setTask(ExecStoppingTask execStoppingTask) {
+	this.task = execStoppingTask;
+}
+
+
 @Override
 protected void processLine(String line) {
 
@@ -42,9 +47,10 @@ protected void processLine(String line) {
 	task.setRemaining(percent);
 	System.out.println("Marked remaining percentage");	
 	if (task.isDone()) {
-		System.out.println("STOPPING --> FINISHED, marking");
+		System.out.println("STOPPING --> FINISHED, marking as finished");
 		task.markAsFinished();
 	}
+
 }
 
 

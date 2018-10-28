@@ -120,6 +120,7 @@ public StartingTask start() throws EurinomeRuntimeException {
 		//FIXME: race condition here, we may be finished already if the process starts and finishes fast
 		process = startedProcess.getProcess();
 		startingTask.setProcess(process);
+		runningTask.setProcess(process);
 		stoppingTask.setProcess(process);
 		finishedTask.setProcess(process);
 	} catch (IOException e) {

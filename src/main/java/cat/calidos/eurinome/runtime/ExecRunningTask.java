@@ -64,14 +64,15 @@ public ExecRunningTask(int type,
 
 }
 
-
-@Override
-public StoppingTask stop() {
-
-	status = STOPPED;
-	
-	return stoppingTask;
-}
+//
+//@Override
+//public StoppingTask stop() {
+//
+//	status = STOPPED;
+//
+//	return stoppingTask;
+//
+//}
 
 
 @Override

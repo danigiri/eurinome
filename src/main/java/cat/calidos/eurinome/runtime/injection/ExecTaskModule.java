@@ -129,7 +129,7 @@ ExecRunningTask runningTask(@Named("Type") int type,
 								problemProcessor,
 								runningOutputProcessor, 
 								problemProcessor, 
-								stoppingTask, 
+								stoppingTask,
 								finishedTask, 
 								callback);
 }
