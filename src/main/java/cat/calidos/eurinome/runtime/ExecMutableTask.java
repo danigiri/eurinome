@@ -33,8 +33,10 @@ import cat.calidos.eurinome.runtime.api.StoppingTask;
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class ExecMutableTask extends ExecTask implements MutableTask {
 
-private StringBuilder output = new StringBuilder();
+private static final String LF = "\n";
 private int remaining = MAX;	// by default we have everything left to do
+
+private StringBuilder output = new StringBuilder();
 protected ExecStoppingTask stoppingTask;
 protected ExecFinishedTask finishedTask;
 
@@ -59,7 +61,8 @@ public ExecMutableTask(int type,
 
 @Override
 public void appendToOutput(String content) {
-	output.append(content);
+	
+	output.append(content).append(LF);
 }
 
 

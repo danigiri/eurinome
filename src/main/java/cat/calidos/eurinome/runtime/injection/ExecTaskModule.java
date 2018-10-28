@@ -91,12 +91,12 @@ ExecStartingTask startingTask(@Named("Type") int type,
 }
 
 
-@Provides @Named("OutputWrapper") ExecOutputProcessor outputProcessorWrapper() {
+@Provides @Singleton @Named("OutputWrapper") ExecOutputProcessor outputProcessorWrapper() {
 	return new ExecOutputProcessor();
 }
 
 
-@Provides @Named("ProblemWrapper") ExecProblemProcessor problemProcessorWrapper() {
+@Provides @Singleton @Named("ProblemWrapper") ExecProblemProcessor problemProcessorWrapper() {
 	return new ExecProblemProcessor(); 
 }
 

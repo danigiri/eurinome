@@ -31,11 +31,11 @@ protected Process process;
 protected ProcessExecutor executor;
 
 private ExecOutputProcessor outputProcessorWrapper;
+private ExecProblemProcessor problemProcessorWrapper;
 protected ExecOutputProcessor logMatcher;
 protected ExecProblemProcessor problemMatcher;
 
 private boolean isOK = true;
-private ExecProblemProcessor problemProcessorWrapper;
 
 
 public ExecTask(int type, int status, ProcessExecutor executor) {
@@ -71,7 +71,7 @@ public void startRedirectingOutput() {
 	// we are using the indirection as the executor.redirect* methods are non-reentrant, namely, if they are called
 	// from within a callback, they have no effect, so we use a level of indirection
 	
-	System.out.println("REDIRECTING (INDIRECTLY)");
+	System.out.println("REDIRECTING (INDIRECTLY) IN "+this.translate(status));
 	problemProcessorWrapper.setIndirectProcessor(problemMatcher);
 	outputProcessorWrapper.setIndirectProcessor(logMatcher);
 	executor.redirectError(problemProcessorWrapper);
