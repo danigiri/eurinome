@@ -16,25 +16,12 @@
 
 package cat.calidos.eurinome.runtime;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import org.zeroturnaround.exec.ProcessExecutor;
-import org.zeroturnaround.exec.StartedProcess;
-import org.zeroturnaround.process.JavaProcess;
-import org.zeroturnaround.process.ProcessUtil;
-import org.zeroturnaround.process.Processes;
-import org.zeroturnaround.process.SystemProcess;
 
-import cat.calidos.eurinome.problems.EurinomeRuntimeException;
-import cat.calidos.eurinome.runtime.api.FinishedTask;
 import cat.calidos.eurinome.runtime.api.RunningTask;
 import cat.calidos.eurinome.runtime.api.StartingTask;
-import cat.calidos.eurinome.runtime.api.StoppingTask;
 
 
 /**

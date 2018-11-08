@@ -17,17 +17,13 @@
 package cat.calidos.eurinome.runtime;
 
 import java.io.IOException;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.process.Processes;
 import org.zeroturnaround.process.SystemProcess;
 
 import cat.calidos.eurinome.problems.EurinomeRuntimeException;
-import cat.calidos.eurinome.runtime.api.FinishedTask;
 import cat.calidos.eurinome.runtime.api.StoppingTask;
-import cat.calidos.eurinome.runtime.api.Task;
 
 /**
 *	@author daniel giribet

@@ -17,17 +17,13 @@
 package cat.calidos.eurinome.runtime;
 
 import java.io.IOException;
-import java.util.function.Predicate;
 
 import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.StartedProcess;
-import org.zeroturnaround.exec.listener.ProcessListener;
-import org.zeroturnaround.exec.stream.LogOutputStream;
 
 import cat.calidos.eurinome.problems.EurinomeRuntimeException;
 import cat.calidos.eurinome.runtime.api.ReadyTask;
 import cat.calidos.eurinome.runtime.api.StartingTask;
-import cat.calidos.eurinome.runtime.api.Task;
 
 
 /**
@@ -43,7 +39,7 @@ private ExecStoppingTask stoppingTask;
 private ExecFinishedTask finishedTask;
 
 
-public ExecReadyTask(int type, 
+public ExecReadyTask(int type,
 						ProcessExecutor executor,
 						ExecStartingTask startingTask,
 						ExecRunningTask runningTask,

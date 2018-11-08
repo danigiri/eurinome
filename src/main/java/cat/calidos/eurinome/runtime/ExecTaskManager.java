@@ -16,38 +16,44 @@
 
 package cat.calidos.eurinome.runtime;
 
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.stream.Collectors;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public class StartingOutputProcessor extends ExecOutputProcessor {
+public class ExecTaskManager {
 
-ExecStartingTask startingTask;
+Map<String, ExecTask> tasks;
 
 
-public StartingOutputProcessor(Function<String, Integer> matcher) {
-	super(matcher);
+public ExecTaskManager(Map<String, ExecTask> tasks) {
+	this.tasks = tasks;
 }
 
 
-/**	this is needed as we will be creating the processor with this task */
-public void setTask(ExecStartingTask startingTask) {
-	this.startingTask = startingTask;
+/**	@param task to be added to the manager */
+public void addReadyTask(ExecReadyTask task) {
+	
 }
 
 
-@Override
-protected void processLine(String line) {
+/**	@return all tasks handled by the manager */
+public List<ExecTask> getTasks() {
+	return new ArrayList<ExecTask>(tasks.values());
+}
 
-	System.out.println("[STARTING]>>"+line);
-	startingTask.appendToOutput(line);
-	int percent = process(line);
-	startingTask.setRemaining(percent);
-	if (startingTask.isDone()) {
-		System.out.println("STARTING --> STARTED, marking and running callback");
-		startingTask.markAsStarted();
-	}
+
+public OptionalInt getStatusOfTask(String id) {
+
+	ExecTask task = tasks.get(id);
+
+	return task==null ? OptionalInt.empty() : OptionalInt.of(task.getStatus());
 
 }
 

@@ -67,7 +67,7 @@ public void appendToOutput(String content) {
 
 
 @Override
-public  void setRemaining(int percent) {						// we have the STDOUT logger and STDEER logger both
+public void setRemaining(int percent) {						// we have the STDOUT logger and STDEER logger both
 	remaining = Math.min(Math.min(MAX, percent), remaining); 	// changing this so we never go up
 }
 

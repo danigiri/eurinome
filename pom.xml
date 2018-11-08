@@ -84,6 +84,7 @@
 						<contextPath>${jetty-context-path}</contextPath>
 						<!-- we add this extra classpath so jetty loads templates and all jar deps like jackson and stuff -->
 						<extraClasspath>${project.build.directory}/${project.artifactId}-${project.version}/WEB-INF/lib</extraClasspath>
+						<!-- containerIncludeJarPattern>.*/classes/.*</containerIncludeJarPattern-->
 						<webInfIncludeJarPattern>^$</webInfIncludeJarPattern>
 						<resourceBases>
 							<resourceBase>${project.build.outputDirectory}</resourceBase>	<!-- data files for angular app -->

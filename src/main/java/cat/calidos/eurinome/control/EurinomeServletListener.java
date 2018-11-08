@@ -14,42 +14,38 @@
  *   limitations under the License.
  */
 
-package cat.calidos.eurinome.runtime;
+package cat.calidos.eurinome.control;
 
-import java.util.function.Function;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public class StartingOutputProcessor extends ExecOutputProcessor {
+//@WebListener
+public class EurinomeServletListener implements ServletContextListener {
 
-ExecStartingTask startingTask;
-
-
-public StartingOutputProcessor(Function<String, Integer> matcher) {
-	super(matcher);
-}
+protected final static Logger log = LoggerFactory.getLogger(EurinomeServletListener.class);
 
 
-/**	this is needed as we will be creating the processor with this task */
-public void setTask(ExecStartingTask startingTask) {
-	this.startingTask = startingTask;
+@Override
+public void contextInitialized(ServletContextEvent sce) {
+
+	log.error("Context initialized");
+	
 }
 
 
 @Override
-protected void processLine(String line) {
+public void contextDestroyed(ServletContextEvent sce) {
 
-	System.out.println("[STARTING]>>"+line);
-	startingTask.appendToOutput(line);
-	int percent = process(line);
-	startingTask.setRemaining(percent);
-	if (startingTask.isDone()) {
-		System.out.println("STARTING --> STARTED, marking and running callback");
-		startingTask.markAsStarted();
-	}
+	log.error("Context destroyed");
 
 }
-
 
 }

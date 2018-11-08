@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	metadata-complete="true">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	metadata-complete="false">
 
 	<!-- Generic request dispatcher -->
 	<servlet>
 		<display-name>generic-servlet</display-name>
 		<servlet-name>EurinomeServlet</servlet-name>
 		<servlet-class>cat.calidos.eurinome.control.EurinomeServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
@@ -16,5 +17,8 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
 		<url-pattern>/dyn/*</url-pattern>
 	</servlet-mapping>
 
+	<listener>
+		<listener-class>cat.calidos.eurinome.control.EurinomeServletListener</listener-class>
+	</listener>
 
 </web-app>
