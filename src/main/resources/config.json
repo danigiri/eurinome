@@ -1,0 +1,6 @@
+{
+	"config": "eurinome",
+	"production": false,
+	"catalogues": "/morfeu/proxy/catalogues.json",
+	"remoteEvents" : "/morfeu/proxy/dyn/events"
+}

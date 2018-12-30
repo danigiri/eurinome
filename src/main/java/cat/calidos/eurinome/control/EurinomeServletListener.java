@@ -36,7 +36,7 @@ protected final static Logger log = LoggerFactory.getLogger(EurinomeServletListe
 @Override
 public void contextInitialized(ServletContextEvent sce) {
 
-	log.error("Context initialized");
+	log.info("Servlet context initialized");
 	
 }
 
@@ -44,7 +44,7 @@ public void contextInitialized(ServletContextEvent sce) {
 @Override
 public void contextDestroyed(ServletContextEvent sce) {
 
-	log.error("Context destroyed");
+	log.info("Servlet context destroyed");
 
 }
 

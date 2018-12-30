@@ -24,6 +24,7 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import cat.calidos.eurinome.problems.EurinomeRuntimeException;
+import cat.calidos.eurinome.runtime.ExecTask;
 import cat.calidos.eurinome.runtime.api.FinishedTask;
 import cat.calidos.eurinome.runtime.api.ReadyTask;
 import cat.calidos.eurinome.runtime.api.RunningTask;
@@ -60,12 +61,13 @@ public void testOneTimeExecSimpleTask() throws Exception {
 	);
 	System.out.println("TEST: about to call start");
 	StartingTask starting = task.start();
+	assertEquals(Task.STARTED, task.getStatus(), "ready tasks should have transitioned to started");
 	starting.spinUntil(Task.STARTED);
 	assertEquals("hello world\n", starting.show());
-	
+
 	RunningTask running = starting.runningTask();
 	running.spinUntil(Task.FINISHED);
-	
+
 	FinishedTask finishedTask = running.finishedTask();
 	assertAll("simple task",
 				() -> assertTrue(finishedTask.isDone(), "Task finished should be 'done'"),
@@ -108,7 +110,6 @@ public void testOneTimeExecComplexTask() throws Exception {
 			() -> assertTrue(finishedCallbackCalled, "Finished callback was not called at all")
 	);
 
-	
 	FinishedTask finished = running.finishedTask();
 	assertAll("complex task",
 				() -> assertTrue(finished.isOK()),

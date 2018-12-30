@@ -24,6 +24,8 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
+import cat.calidos.eurinome.runtime.api.Task;
+
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,10 +39,17 @@ public ExecTaskManager(Map<String, ExecTask> tasks) {
 }
 
 
-/**	@param task to be added to the manager */
-public void addReadyTask(ExecReadyTask task) {
-	
+/**	@param ready task to be added to the manager, will replace existing task with the same id */
+public void addReadyTask(ExecReadyTask task, String id) {
+	this.tasks.put(id, task);
 }
+
+
+//public Optional<ExectReadyTask> getReadyTask() {
+//	
+//	ExecTask task = tasks.get(id);
+//	return task==null || task.getStatus()!=Task.READY
+//}
 
 
 /**	@return all tasks handled by the manager */

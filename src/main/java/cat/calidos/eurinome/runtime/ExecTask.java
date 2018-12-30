@@ -39,7 +39,7 @@ private boolean isOK = true;
 
 
 public ExecTask(int type, int status, ProcessExecutor executor) {
-	
+
 	this.type = type;
 	this.status = status;
 	this.executor = executor;

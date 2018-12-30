@@ -25,7 +25,7 @@ import dagger.Component;
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-@Component(modules = {ControlModule.class, PingControlModule.class})
+@Component(modules = {EurinomenClientEventControlModule.class, ControlModule.class, PingControlModule.class})
 public interface EurinomeControlComponent extends ControlComponent {
 
 @Component.Builder

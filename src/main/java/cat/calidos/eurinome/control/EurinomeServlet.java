@@ -40,6 +40,7 @@ public ControlComponent getControl(String path, Map<String, String> params) {
 											.withPath(path)
 											.method(DaggerControlComponent.GET)
 											.withParams(params)
+											.andContext(context)
 											.build();
 }
 
@@ -50,6 +51,7 @@ public ControlComponent putControl(String path, Map<String, String> params) {
 											.withPath(path)
 											.method(DaggerControlComponent.POST)
 											.withParams(params)
+											.andContext(context)
 											.build();
 }
 
