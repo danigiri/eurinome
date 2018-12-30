@@ -20,7 +20,7 @@
 		<dagger-2-version>2.16</dagger-2-version>
 		<jackson-2-version>2.9.7</jackson-2-version>
 		<jtwig-version>5.87.0.RELEASE</jtwig-version>
-		<morfeu-version>0.0.2-SNAPSHOT</morfeu-version>
+		<morfeu-version>0.1.0-SNAPSHOT</morfeu-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<charts-version>master</charts-version>
