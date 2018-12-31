@@ -23,7 +23,7 @@ public void testHelmfileCustomBinaryCommand() throws Exception, InterruptedExcep
 																	.helmfileBinaryAt("/bin/foo")
 																	.build();
 	assertAll("Custom command",
-			() -> assertEquals("/bin/foo -q apply --file 'foo'", taskBuilder.command()),
+			() -> assertEquals("/bin/foo -q --file 'foo' apply", taskBuilder.command()),
 			() -> assertTrue(taskBuilder.task().isOneTime())
 	);
 
@@ -39,7 +39,7 @@ public void testHelmfileCommand() throws Exception, InterruptedException {
 																	.withFile("foo")
 																	.build();
 	assertAll("Default command",
-			() -> assertEquals("/usr/local/bin/helmfile -q apply --file 'foo'", taskBuilder.command()),
+			() -> assertEquals("/usr/local/bin/helmfile -q --file 'foo' apply", taskBuilder.command()),
 			() -> assertTrue(taskBuilder.task().isOneTime())
 	);
 

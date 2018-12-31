@@ -33,7 +33,7 @@ ReadyTask helmfileTask(String command) {
 String command(@Named("EffectiveHelm") String effectiveHelmBinaryPath, 
 				@Named("Command") String command,
 				@Named("Path") String path) {
-	return effectiveHelmBinaryPath+" -q "+command+" --file '"+path+"'";
+	return effectiveHelmBinaryPath+" -q --file '"+path+"' "+command;
 }
 
 @Provides @Named("EffectiveHelm") 

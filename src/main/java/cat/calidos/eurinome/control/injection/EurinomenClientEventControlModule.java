@@ -6,6 +6,8 @@ import java.util.function.BiFunction;
 
 import javax.inject.Named;
 
+import cat.calidos.eurinome.runtime.injection.DaggerHelmfileTaskComponent;
+import cat.calidos.eurinome.runtime.injection.HelmfileTaskComponent;
 import cat.calidos.morfeu.webapp.injection.ControlComponent;
 import dagger.Module;
 import dagger.Provides;
@@ -43,6 +45,16 @@ private static String handle(String event, Map<String, String> params) {
 	}
 	
 	output.append("\"}");
+	
+	
+	if (event.equals("ContentRequestEvent")) {
+		HelmfileTaskComponent taskBuilder = DaggerHelmfileTaskComponent.builder()
+																		.run("apply")
+																		.withFile(params.get("doc"))
+																		.build();
+		System.err.println(">>>>>>>>>>> command="+taskBuilder.command());
+		taskBuilder.task().start();
+	}
 	
 	return output.toString();
 
