@@ -14,26 +14,31 @@ import dagger.Provides;
 @Module
 public class HelmfileTaskModule {
 
-private static final String HELMFILE = "/usr/local/bin/helmfile";
+private static final String HELMFILE_BINARY = "/usr/local/bin/helmfile";
 
 @Provides
-ReadyTask helmfileTask(@Named("EffectiveHelm") String effectiveHelmBinaryPath, @Named("Path") String path) {
+ReadyTask helmfileTask(String command) {
 
 	return DaggerExecTaskComponent.builder()
-									.exec("/bin/bash", "-c","/usr/local/bin/helmfile apply --file '"+path+"'")
+									.exec("/bin/bash", "-c", command)
+									.startedMatcher(s -> Task.NEXT)
 									.type(Task.ONE_TIME)
-									//.startedMatcher(s -> s.equals("started") ? Task.NEXT : Task.MAX)
-									.runningMatcher(s -> Integer.parseInt(s))
-									//.finishedCallback((r, f) -> {finishedCallbackCalled = true;})
 									.problemMatcher(s -> true)
 									.build()
 									.readyTask();
+
 }
 
+@Provides
+String command(@Named("EffectiveHelm") String effectiveHelmBinaryPath, 
+				@Named("Command") String command,
+				@Named("Path") String path) {
+	return effectiveHelmBinaryPath+" -q "+command+" --file '"+path+"'";
+}
 
 @Provides @Named("EffectiveHelm") 
 String effectiveHelmBinaryPath(@Nullable @Named("HelmfileBinary") String path) {
-	return path==null ? HELMFILE : path;
+	return path==null ? HELMFILE_BINARY : path;
 }
 
 

@@ -24,7 +24,6 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import cat.calidos.eurinome.problems.EurinomeRuntimeException;
-import cat.calidos.eurinome.runtime.ExecTask;
 import cat.calidos.eurinome.runtime.api.FinishedTask;
 import cat.calidos.eurinome.runtime.api.ReadyTask;
 import cat.calidos.eurinome.runtime.api.RunningTask;

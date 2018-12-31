@@ -3,10 +3,10 @@ package cat.calidos.eurinome.runtime.injection;
 import javax.annotation.Nullable;
 import javax.inject.Named;
 
-import cat.calidos.eurinome.runtime.api.ReadyTask;
-import cat.calidos.eurinome.runtime.injection.ExecTaskComponent.Builder;
 import dagger.BindsInstance;
 import dagger.Component;
+
+import cat.calidos.eurinome.runtime.api.ReadyTask;
 
 /**
 *	@author daniel giribet
@@ -14,13 +14,15 @@ import dagger.Component;
 @Component(modules=HelmfileTaskModule.class)
 public interface HelmfileTaskComponent {
 
-ReadyTask helmfileTask();
+ReadyTask task();
+String command();
 
 
 @Component.Builder
 interface Builder {
 
-	@BindsInstance Builder with(@Named("Path") String path);
+	@BindsInstance Builder withFile(@Named("Path") String path);
+	@BindsInstance Builder run(@Named("Command") String command);
 	@BindsInstance Builder helmfileBinaryAt(@Nullable @Named("HelmfileBinary") String path);
 	HelmfileTaskComponent build();
 
