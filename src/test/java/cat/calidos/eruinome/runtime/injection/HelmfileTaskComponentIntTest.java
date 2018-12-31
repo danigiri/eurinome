@@ -5,12 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import cat.calidos.eurinome.problems.EurinomeRuntimeException;
-import cat.calidos.eurinome.runtime.api.FinishedTask;
-import cat.calidos.eurinome.runtime.api.ReadyTask;
-import cat.calidos.eurinome.runtime.api.RunningTask;
-import cat.calidos.eurinome.runtime.api.StartingTask;
-import cat.calidos.eurinome.runtime.api.Task;
 import cat.calidos.eurinome.runtime.injection.DaggerHelmfileTaskComponent;
 import cat.calidos.eurinome.runtime.injection.HelmfileTaskComponent;
 
@@ -28,9 +22,10 @@ public void testHelmfileCustomBinaryCommand() throws Exception, InterruptedExcep
 																	.withFile("foo")
 																	.helmfileBinaryAt("/bin/foo")
 																	.build();
-	assertEquals("/bin/foo -q apply --file 'foo'", taskBuilder.command());
-	ReadyTask task = taskBuilder.task();
-	assertTrue(task.isOneTime());
+	assertAll("Custom command",
+			() -> assertEquals("/bin/foo -q apply --file 'foo'", taskBuilder.command()),
+			() -> assertTrue(taskBuilder.task().isOneTime())
+	);
 
 }
 
@@ -43,9 +38,10 @@ public void testHelmfileCommand() throws Exception, InterruptedException {
 																	.run("apply")
 																	.withFile("foo")
 																	.build();
-	assertEquals("/usr/local/bin/helmfile -q apply --file 'foo'", taskBuilder.command());
-	ReadyTask task = taskBuilder.task();
-	assertTrue(task.isOneTime());
+	assertAll("Default command",
+			() -> assertEquals("/usr/local/bin/helmfile -q apply --file 'foo'", taskBuilder.command()),
+			() -> assertTrue(taskBuilder.task().isOneTime())
+	);
 
 }
 
