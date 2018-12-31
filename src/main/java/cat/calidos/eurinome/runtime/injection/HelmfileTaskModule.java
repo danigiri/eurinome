@@ -4,29 +4,41 @@ import javax.annotation.Nullable;
 import javax.inject.Named;
 
 import cat.calidos.eurinome.runtime.api.ReadyTask;
-import cat.calidos.eurinome.runtime.injection.ExecTaskComponent.Builder;
-import dagger.BindsInstance;
-import dagger.Component;
+import cat.calidos.eurinome.runtime.api.Task;
+import dagger.Module;
+import dagger.Provides;
 
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-@Component(modules=HelmfileTaskModule.class)
-public interface HelmfileTaskComponent {
+@Module
+public class HelmfileTaskModule {
 
-ReadyTask helmfileTask();
+private static final String HELMFILE = "/usr/local/bin/helmfile";
+
+@Provides
+ReadyTask helmfileTask(@Named("EffectiveHelm") String effectiveHelmBinaryPath, @Named("Path") String path) {
+
+	return DaggerExecTaskComponent.builder()
+									.exec("/bin/bash", "-c","/usr/local/bin/helmfile apply --file '"+path+"'")
+									.type(Task.ONE_TIME)
+									//.startedMatcher(s -> s.equals("started") ? Task.NEXT : Task.MAX)
+									.runningMatcher(s -> Integer.parseInt(s))
+									//.finishedCallback((r, f) -> {finishedCallbackCalled = true;})
+									.problemMatcher(s -> true)
+									.build()
+									.readyTask();
+}
 
 
-@Component.Builder
-interface Builder {
+@Provides @Named("EffectiveHelm") 
+String effectiveHelmBinaryPath(@Nullable @Named("HelmfileBinary") String path) {
+	return path==null ? HELMFILE : path;
+}
 
-	@BindsInstance Builder with(@Named("Path") String path);
-	@BindsInstance Builder helmfileBinaryAt(@Nullable @Named("HelmfileBinary") String path);
-	HelmfileTaskComponent build();
 
 }
 
-}
 
 /*
  *    Copyright 2018 Daniel Giribet

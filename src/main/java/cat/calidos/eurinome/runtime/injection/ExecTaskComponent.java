@@ -24,7 +24,8 @@ import cat.calidos.eurinome.runtime.api.ReadyTask;
 /**
 *	@author daniel giribet
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-@Component(modules={ExecTaskModule.class}) @Singleton
+@Component(modules=ExecTaskModule.class)
+@Singleton
 public interface ExecTaskComponent {
 
 ReadyTask readyTask();

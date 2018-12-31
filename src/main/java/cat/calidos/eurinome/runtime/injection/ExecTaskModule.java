@@ -24,6 +24,9 @@ import javax.annotation.Nullable;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import dagger.Module;
+import dagger.Provides;
+
 import org.zeroturnaround.exec.ProcessExecutor;
 
 import cat.calidos.eurinome.runtime.ExecFinishedTask;
@@ -38,9 +41,6 @@ import cat.calidos.eurinome.runtime.StartingOutputProcessor;
 import cat.calidos.eurinome.runtime.StoppingOutputProcessor;
 import cat.calidos.eurinome.runtime.api.ReadyTask;
 import cat.calidos.eurinome.runtime.api.Task;
-import dagger.Module;
-import dagger.Provides;
-import dagger.producers.ProducerModule;
 
 /**
 *	@author daniel giribet
