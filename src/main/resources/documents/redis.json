@@ -1,0 +1,7 @@
+{
+	"name": "Redis"
+	,"desc": "Redis example"
+	,"kind": "yaml"
+	,"modelURI": "target/classes/models/helmfile-model.xsd"
+	,"contentURI": "target/classes/documents/redis.yaml"
+}

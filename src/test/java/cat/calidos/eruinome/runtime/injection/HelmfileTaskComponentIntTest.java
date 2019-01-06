@@ -30,7 +30,6 @@ public void testHelmfileCustomBinaryCommand() throws Exception, InterruptedExcep
 }
 
 
-
 @Test @DisplayName("Generate a fake helmfile command")
 public void testHelmfileCommand() throws Exception, InterruptedException {
 

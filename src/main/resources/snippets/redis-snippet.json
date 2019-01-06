@@ -1,0 +1,8 @@
+{
+	"name": "Redis"
+	,"desc": "Redis snippet"
+	,"kind": "simple"
+	,"modelURI": "target/classes/models/helmfile-model.xsd?filter=/helmfile"
+	,"skipValidation": true
+	,"contentURI": "snippets/redis-snippet.yaml"
+}

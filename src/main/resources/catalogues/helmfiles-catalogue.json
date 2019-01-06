@@ -4,7 +4,9 @@
 	,"documents": [
 			{ "name":"Getting started", "kind": "yaml", "uri":"documents/getting-started.json" }
 			,{ "name":"Example", "kind": "yaml", "uri":"documents/example.json" }
+			,{ "name":"Redis", "kind": "yaml", "uri":"documents/redis.json" }
 	]
 	,"snippets": [
+		 { "name": "Redis", "kind": "simple", "uri": "proxy/snippets/redis-snippet.json" }
 	]
 	}

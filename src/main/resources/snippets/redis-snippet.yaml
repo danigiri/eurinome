@@ -1,0 +1,11 @@
+releases:
+  - name: 'redis'
+    namespace: 'eurinome'
+    labels:
+    chart: 'redis'
+    repo: 'stable'
+    component: 'redis'
+    namespace: 'eurinome'
+    chart: 'stable/redis'
+    version: '~5.1.6'
+    values:

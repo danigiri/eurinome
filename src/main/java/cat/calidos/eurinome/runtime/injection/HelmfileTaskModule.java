@@ -16,6 +16,7 @@ public class HelmfileTaskModule {
 
 private static final String HELMFILE_BINARY = "/usr/local/bin/helmfile";
 
+
 @Provides
 ReadyTask helmfileTask(String command) {
 
@@ -29,12 +30,14 @@ ReadyTask helmfileTask(String command) {
 
 }
 
+
 @Provides
 String command(@Named("EffectiveHelm") String effectiveHelmBinaryPath, 
 				@Named("Command") String command,
 				@Named("Path") String path) {
 	return effectiveHelmBinaryPath+" -q --file '"+path+"' "+command;
 }
+
 
 @Provides @Named("EffectiveHelm") 
 String effectiveHelmBinaryPath(@Nullable @Named("HelmfileBinary") String path) {
