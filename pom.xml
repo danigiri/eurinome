@@ -27,7 +27,6 @@
 		<charts-url>https://github.com/helm/charts/archive/${charts-version}.zip</charts-url>
 		<charts-temp>${project.build.directory}/${charts-version}.zip</charts-temp>
 		<charts-target>${project.build.directory}</charts-target>
-
 	</properties>
 
 	<build>

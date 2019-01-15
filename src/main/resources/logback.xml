@@ -10,6 +10,7 @@
 	<logger name="org.apache.http" level="WARN"/>
 
 	<logger name="cat.calidos.eurinome.control" level="INFO"/>
+	<logger name="cat.calidos.morfeu.utils.injection.SaverModule" level="DEBUG"/>
 
 	<root level="WARN">
 		<appender-ref ref="STDOUT" />

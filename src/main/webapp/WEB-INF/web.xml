@@ -5,6 +5,13 @@
 	version="4.0" 
 	metadata-complete="false">
 
+
+	<context-param>
+		<description>Resources uri prefix</description>
+		<param-name>__RESOURCES_PREFIX</param-name>
+		<param-value>file:///path/to/eurinome</param-value>
+	</context-param>
+
 	<!-- Generic request dispatcher -->
 	<servlet>
 		<display-name>generic-servlet</display-name>
