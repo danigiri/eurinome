@@ -1,0 +1,8 @@
+{
+	"name": "Mysql"
+	,"desc": "Mysql snippet"
+	,"kind": "simple"
+	,"modelURI": "target/classes/models/helmfile-model.xsd?filter=/helmfile"
+	,"skipValidation": true
+	,"contentURI": "snippets/mysql-snippet.yaml"
+}

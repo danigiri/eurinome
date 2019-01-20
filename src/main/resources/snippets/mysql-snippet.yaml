@@ -1,0 +1,5 @@
+releases:
+  - name: "mysql"
+    namespace: "eurinome"
+    chart: "stable/mysql"
+    version: "0.10.1"

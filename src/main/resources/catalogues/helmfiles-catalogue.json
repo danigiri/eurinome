@@ -7,6 +7,7 @@
 			,{ "name":"Redis", "kind": "yaml", "uri":"documents/redis.json" }
 	]
 	,"snippets": [
-		 { "name": "Redis", "kind": "simple", "uri": "proxy/snippets/redis-snippet.json" }
+		{ "name": "Redis", "kind": "simple", "uri": "proxy/snippets/redis-snippet.json" }
+		,{ "name": "Mysql", "kind": "simple", "uri": "proxy/snippets/mysql-snippet.json" }
 	]
 	}
