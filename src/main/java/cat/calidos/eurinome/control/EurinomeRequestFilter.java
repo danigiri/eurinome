@@ -10,14 +10,18 @@ import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cat.calidos.morfeu.problems.FetchingException;
+import cat.calidos.morfeu.utils.Config;
 import cat.calidos.morfeu.utils.Saver;
 import cat.calidos.morfeu.utils.injection.DaggerSaverComponent;
 import cat.calidos.morfeu.utils.injection.DaggerURIComponent;
@@ -62,11 +66,24 @@ public void doFilter(ServletRequest request, ServletResponse response, FilterCha
 												.saver()
 												.get();
 			saver.save();
+			// now we give a response back
+			HttpServletResponse res = (HttpServletResponse) response;
+			res.setStatus(HttpServletResponse.SC_OK);
+			ServletOutputStream outputStream = res.getOutputStream();
+			IOUtils.write("{\n" + 
+					"	\"result\": \"OK\"\n" + 
+					"	,\"target\": \""+destination+"\"\n" + 
+					"	,\"operation\": \"FileSaver\"\n" + 
+					"	,\"operationTime\": 1\n" + 
+					"}\n" + 
+					"", outputStream, Config.DEFAULT_CHARSET);
+			outputStream.close();
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	} else {
 		chain.doFilter(request, response);
 	}

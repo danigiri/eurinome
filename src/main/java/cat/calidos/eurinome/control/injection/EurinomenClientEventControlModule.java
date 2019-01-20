@@ -6,6 +6,9 @@ import java.util.function.BiFunction;
 
 import javax.inject.Named;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cat.calidos.eurinome.runtime.injection.DaggerHelmfileTaskComponent;
 import cat.calidos.eurinome.runtime.injection.HelmfileTaskComponent;
 import cat.calidos.morfeu.webapp.injection.ControlComponent;
@@ -19,6 +22,11 @@ import dagger.multibindings.StringKey;
 *///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Module
 public class EurinomenClientEventControlModule {
+
+protected final static Logger log = LoggerFactory.getLogger(EurinomenClientEventControlModule.class);
+
+private static final String CONTENT_SAVED_EVENT = "ContentSavedEvent";
+private static final String CONTENT_REQUEST_EVENT = "ContentRequestEvent";
 
 
 @Provides @IntoMap @Named("GET")
@@ -36,26 +44,26 @@ public static String contentType() {
 
 
 private static String handle(String event, Map<String, String> params) {
-	
+
 	StringBuffer output = new StringBuffer();
 	output.append("{\"result\":\"OK\", \"desc\":\"'"+event+"'"); 
-	
-	if (event.equals("ContentRequestEvent")) {
+
+	if (event.equals(CONTENT_REQUEST_EVENT)) {
 		output.append("("+params.get("doc")+")");
 	}
-	
+
 	output.append("\"}");
-	
-	
-	if (event.equals("ContentRequestEvent")) {
+
+
+	if (event.equals(CONTENT_REQUEST_EVENT) || event.equals(CONTENT_SAVED_EVENT)) {
 		HelmfileTaskComponent taskBuilder = DaggerHelmfileTaskComponent.builder()
 																		.run("apply")
 																		.withFile(params.get("doc"))
 																		.build();
-		System.err.println(">>>>>>>>>>> command="+taskBuilder.command());
+		log.info(">> command={}" ,taskBuilder.command());
 		taskBuilder.task().start();
 	}
-	
+
 	return output.toString();
 
 }
@@ -64,7 +72,7 @@ private static String handle(String event, Map<String, String> params) {
 }
 
 /*
- *    Copyright 2018 Daniel Giribet
+ *    Copyright 2019 Daniel Giribet
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
