@@ -3,10 +3,11 @@ package cat.calidos.eurinome.runtime.injection;
 import javax.annotation.Nullable;
 import javax.inject.Named;
 
-import cat.calidos.eurinome.runtime.api.ReadyTask;
-import cat.calidos.eurinome.runtime.api.Task;
 import dagger.Module;
 import dagger.Provides;
+import cat.calidos.morfeu.runtime.api.ReadyTask;
+import cat.calidos.morfeu.runtime.api.Task;
+import cat.calidos.morfeu.runtime.injection.DaggerExecTaskComponent;
 
 /**
 *	@author daniel giribet
