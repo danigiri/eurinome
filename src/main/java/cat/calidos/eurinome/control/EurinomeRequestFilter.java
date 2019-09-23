@@ -20,6 +20,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cat.calidos.morfeu.control.injection.DaggerMorfeuPOSTFilterComponent;
 import cat.calidos.morfeu.problems.FetchingException;
 import cat.calidos.morfeu.utils.Config;
 import cat.calidos.morfeu.utils.Saver;
@@ -43,50 +44,12 @@ public void init(FilterConfig filterConfig) throws ServletException {
 public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 		throws IOException, ServletException {
 
-	HttpServletRequest req = (HttpServletRequest) request;
+	boolean handled = DaggerMorfeuPOSTFilterComponent.builder().request(request).response(response).build().handle();
 
-	log.trace("------ Request filter request ({} {}) ------", req.getMethod(), req.getServletPath());
-	if (req.getMethod().equals("POST")) {
-		ServletContext ctxt = req.getServletContext();
-		String prefix = ctxt.getInitParameter("__RESOURCES_PREFIX");
-		prefix = (String)((Properties)ctxt.getAttribute(GenericHttpServlet.__CONFIG)).get("__RESOURCES_PREFIX");
-		
-		String uri = prefix+req.getServletPath();
-		log.info("------ Request filter req path ({}) ------", uri);
-		
-		// we assume Morfeu is doing the validation for now
-		try {
-			URI destination = DaggerURIComponent.builder().from(uri).builder().uri().get();
-			String content = req.getParameter("content");
-			System.err.println(content);
-			Saver saver = DaggerSaverComponent.builder()
-												.toURI(destination)
-												.content(content)
-												.build()
-												.saver()
-												.get();
-			saver.save();
-			// now we give a response back
-			HttpServletResponse res = (HttpServletResponse) response;
-			res.setStatus(HttpServletResponse.SC_OK);
-			ServletOutputStream outputStream = res.getOutputStream();
-			IOUtils.write("{\n" + 
-					"	\"result\": \"OK\"\n" + 
-					"	,\"target\": \""+destination+"\"\n" + 
-					"	,\"operation\": \"FileSaver\"\n" + 
-					"	,\"operationTime\": 1\n" + 
-					"}\n" + 
-					"", outputStream, Config.DEFAULT_CHARSET);
-			outputStream.close();
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	} else {
+	if (!handled) {
 		chain.doFilter(request, response);
 	}
+
 }
 
 
