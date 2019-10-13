@@ -18,7 +18,8 @@ package cat.calidos.eurinome.model;
 
 import java.util.List;
 
-import cat.calidos.eurinome.runtime.api.Showable;
+import cat.calidos.morfeu.runtime.api.Showable;
+
 
 /**
 *	@author daniel giribet

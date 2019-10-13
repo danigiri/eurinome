@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-		   xmlns:mf="http://dani.calidos.com/morfeu/metadata"
-		   >
+<xs:schema	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:mf="http://dani.calidos.com/morfeu/metadata"
+			>
 
 	<xs:annotation>
 		<xs:documentation>
 		XML Schema for helmfile declarative spec cell definitions
 		</xs:documentation>
 	</xs:annotation>
-
 
 	<!-- this is a hack that should be configurable -->
 	<xs:include schemaLocation="http://localhost:8080/morfeu/test-resources/models/test-types.xsd"/>

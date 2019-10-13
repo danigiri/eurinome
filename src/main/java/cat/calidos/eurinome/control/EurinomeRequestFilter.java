@@ -1,32 +1,18 @@
 package cat.calidos.eurinome.control;
 
 import java.io.IOException;
-import java.net.URI;
-import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cat.calidos.morfeu.control.injection.DaggerMorfeuPOSTFilterComponent;
-import cat.calidos.morfeu.problems.FetchingException;
-import cat.calidos.morfeu.utils.Config;
-import cat.calidos.morfeu.utils.Saver;
-import cat.calidos.morfeu.utils.injection.DaggerSaverComponent;
-import cat.calidos.morfeu.utils.injection.DaggerURIComponent;
-import cat.calidos.morfeu.webapp.GenericHttpServlet;
 
 /**
 *	@author daniel giribet
@@ -35,10 +21,12 @@ public class EurinomeRequestFilter implements Filter {
 
 protected final static Logger log = LoggerFactory.getLogger(EurinomeRequestFilter.class);
 
+
 @Override
 public void init(FilterConfig filterConfig) throws ServletException {
 	log.info("------ Request filter initialized ({}) ------", filterConfig.getFilterName());
 }
+
 
 @Override
 public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
